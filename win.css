@@ -1,0 +1,91 @@
+.window {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    background: white;
+    box-shadow: 0px 0px 13px 0px #000000;
+}
+
+.titlebar {
+    --titlebar-height: 28px;
+    height: var(--titlebar-height);
+    background:white;
+    text-align: left;
+    vertical-align: center;
+    line-height: var(--titlebar-height);
+}
+.titlebar::after {
+    content: "Untitled - Notepad";
+    float: left;
+    background: url(notepad.png) no-repeat;
+    background-size: 28px;
+    padding: 4px;
+    padding-left: 32px;;
+    line-height: 28px;
+}
+
+.controlButtons, .close, .minimize, .maximize {
+    text-align: center;
+    float: right;
+}
+.close, .minimize, .maximize {
+    width: 50px;
+    height: 100%;
+}
+.minimize:after {
+    content: "\23bd";
+}
+.maximize:after {
+    content: '\2610';
+}
+.close:after {
+    content: "\2715";
+}
+.minimize:hover, .maximize:hover {
+    color: black;
+    background: #ccc;
+    transition: 0.2s;
+}
+.close:hover {
+    color: white;
+    background: #E04343;
+    transition: 0.2s;
+}
+
+.windowBody {
+    width: 400px;
+    height: 300px;
+    background: white;
+    overflow: hidden;
+}
+
+.notepad {
+    width:calc(100% - 4px);
+    height:calc(100% - 34px);
+    border: none;
+    outline: none;
+    overflow-y: scroll;
+    padding-left: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 4px;
+    resize: none;
+    font-size: 22px;
+    border-top: 1px solid lightslategrey;
+}
+
+.menu-item:first {
+    padding-left: 8px;
+}
+.menu-item {
+    float: left;
+    padding-left: 8px;
+    padding-right: 8px;
+    line-height: 28px;
+}
+.menubar {
+    height: 28px;
+}
+.menu-item:hover {
+    background: #ccc;
+}
