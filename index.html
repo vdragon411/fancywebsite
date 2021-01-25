@@ -6,73 +6,34 @@
     <title>MyWebsite</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="win.css">
+    <!-- <link rel="stylesheet" href="mac.css"> -->
     <style>
-        .wallpaper {
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            background-image: url(assets/wallpaper-win.jpg);
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .taskbar {
-            position: absolute;
-            left: 0px;
-            bottom: 0px;
-            width: 100%;
-            height: 48px;
-            background: black;
-        }
-
-        .task-btn {
-            float: left;
-            height: 100%;
-            width: 48px;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 65%;
-
-            margin-right: 4px;
-        }
-        .task-hover:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-        }
-        .task-apps {
-            height: 100%;
-            float: left;
-        }
-        .task-active {
-            background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0px -2px 0px 0px white inset;
-        }
-
-        .window {
-            position: absolute;
-            left: 100px;
-            top: 100px;
-
-            width: 400px;
-            height: 300px;
-            background: white;
-        }
 
     </style>
 </head>
 <body>
-    <div class="wallpaper"> </div>
-    <div class="taskbar">
+    <div class="taskbar panel-bottom">
         <div class="task-btn task-hover"></div>
         <div class="task-apps"></div>
+        <div class="task-btn task-panel-divider-right"></div>
+        <div class="task-btn task-hover task-tray"></div>
+        <div class="task-btn task-hover task-calender"></div>
+        <div class="task-btn task-hover task-notifications"></div>
+        <div class="task-btn task-hover task-show-desktop"></div>
     </div>
-    <!-- <div class="window">
-        <div class="ctrl-btns">
-            <div class="btn-min"></div>
-            <div class="btn-max"></div>
-            <div class="btn-close"></div>
+    <div class="viewport">
+        <div class="wallpaper"></div>
+        <div class="window">
+            <div class="ctrl-btns">
+                <div class="btn-min"></div>
+                <div class="btn-max"></div>
+                <div class="btn-close"></div>
+            </div>
         </div>
-    </div> -->
+    </div>
+
+
     <!-- <script src="index.js"></script> -->
     <script>
         var elem = document.getElementsByClassName("task-btn")[0];
@@ -96,8 +57,34 @@
         paths.forEach(imgPath => {
             apps.appendChild(createAppBtn(imgPath));
         });
-        apps.children[0].classList.toggle("task-active");
+        apps.children[2].classList.toggle("task-active");
 
+        var win = document.getElementsByClassName("window")[0];
+        win.onmousedown = ev => {
+            let compStyle = window.getComputedStyle(win);
+            let px = parseFloat(compStyle.getPropertyValue('left'));
+            let py = parseFloat(compStyle.getPropertyValue('top'));
+            win._offsetX = ev.pageX - px;
+            win._offsetY = ev.pageY - py;
+
+            document.onmousemove = ev => {
+                win.style.left = (ev.pageX - win._offsetX).toString() + 'px';
+                win.style.top = (ev.pageY - win._offsetY).toString() + 'px';
+            }
+        }
+        win.onmouseup = ev => {
+            document.onmousemove = null;
+        }
+
+        var calender = document.getElementsByClassName("task-calender")[0];
+        var d = new Date();
+        var t = new Intl.DateTimeFormat('default',
+                {
+                    hour12: true,
+                    hour: 'numeric',
+                    minute: 'numeric'
+                }).format(d);
+        calender.innerHTML = "<center>"+t.toUpperCase()+"<br>"+d.toLocaleDateString()+"<center>";
     </script>
 </body>
 </html>
