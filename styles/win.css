@@ -1,0 +1,197 @@
+/* .window {
+    overflow: hidden;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+
+    width: 100px;
+    height: 100px;
+    background: white;
+} */
+
+:root {
+    --taskbar-size: 48px;
+}
+
+.red {
+    background-color: red;
+}
+.blue {
+    background-color: blue;
+}
+.green {
+    background-color: green;
+}
+.gray {
+    background-color: gray;
+}
+.white {
+    background-color: white;
+}
+
+
+.vertical {
+    flex-direction: column;
+}
+
+.horizontal {
+    flex-direction: row;
+}
+
+.panel {
+    display: flex;
+    min-height: var(--taskbar-size);
+}
+.veritcal, .panel {
+    max-height: unset;
+}
+
+.block {
+    min-width: var(--taskbar-size);
+    min-height: var(--taskbar-size);
+    max-height: var(--taskbar-size);
+    padding: auto;
+    overflow: hidden;
+}
+
+.vertical > .block {
+    min-width: unset;
+    min-height: calc(var(--taskbar-size)/2);
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.resize {
+    overflow: auto;
+    resize: both;
+}
+
+.absolute-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.relative-center {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.taskbar-icon {
+    --icon-size: calc(var(--taskbar-size) / 1.6);
+    min-width: var(--icon-size);
+    min-height: var(--icon-size);
+    max-width: var(--icon-size);
+    max-height: var(--icon-size);
+}
+.start-icon {
+    --icon-size: calc(var(--taskbar-size) / 2);
+    min-width: var(--icon-size);
+    min-height: var(--icon-size);
+    max-width: var(--icon-size);
+    max-height: var(--icon-size);
+}
+
+.taskbar {
+    /* min-height: var(--taskbar-size); */
+    min-width: var(--taskbar-size);
+    width: 100%;
+    background-color: black;
+}
+
+.vertical.taskbar {
+    width: unset;
+    height: 100%;
+    flex-direction: column;
+}
+
+.task-btn {
+    margin-right: 8px;
+}
+
+.task-active {
+    box-shadow: inset 0px -4px 0px 0px white;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+.hoverable:hover {
+    transition: 0.25s;
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.hoverable-light:hover {
+    transition: 0.25s;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.time-date {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: calc(var(--taskbar-size)/2.1);
+    padding-top: calc(var(--taskbar-size) * 0.1);
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: calc(var(--taskbar-size)/3);
+}
+
+.right-separator {
+    margin-left: auto;
+}
+
+.vertical > .right-separator {
+    margin-top: auto;
+}
+
+.win-glow-effect {
+    position: relative;
+    width: calc(var(--taskbar-size) * 4);
+    height: calc(var(--taskbar-size) * 4);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.2), transparent);
+}
+
+
+.cortana {
+    width: 300px;
+    outline: none;
+    padding-left: 8px;
+    font-size: calc(var(--taskbar-size)/3);
+}
+
+
+.cortana, .cortana-mic {
+    background-color: white;
+}
+
+.cortana-mic-icon{
+    min-width: 14px;
+    max-width: calc(var(--taskbar-size)/4);
+    filter: opacity(0.6)
+}
+
+.show-desktop {
+    min-width: 10px;
+    max-width: 10px;
+    padding: unset;
+    border: 1px solid rgba(255, 255, 255, 0.342);
+}
+
+.task-view-btn {
+    min-width: var(--taskbar-size);
+    max-width: var(--taskbar-size);
+}
+.task-view-icon {
+    width: 50%;
+    height: 40%;
+    filter: invert();
+}
+
+.softwarecenter {
+    filter: grayscale() brightness(3);
+}
+
+.invert {
+    filter: grayscale() brightness(3);
+}
