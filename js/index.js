@@ -1,120 +1,120 @@
-'use strict';
+var desktop = document.createElement("div");
+desktop.classList.add("desktop");
+document.body.appendChild(desktop);
 
-var elemBuilder = (function () {
-    var elems = {
-        "desktop": { classes: ["desktop"] },
-        "wallpaper": { classes: ["wallpaper"] },
-        "panel": {
-            classes: ["panel", "taskbar", "noselect"],
-            obj: {
-                style: {
-                    position: "absolute",
-                    left: "0px",
-                    bottom: "0px"
-                }
-            }
-        },
-        "startBtn": {
-            classes: ["panel", "block", "hoverable", "start-btn"],
-            children: [
-                {
-                    tag: "img",
-                    classes: ["relative-center", "start-icon"],
-                    obj: {
-                        src: "assets/start-win.svg"
-                    }
-                }
-            ]
-        }
-    };
 
-    function buildElem(tag, classes) {
-        var elem = document.createElement(tag);
+function Panel(parent) {
+    'use strict';
+    var root = document.createElement("div");
+    root.classList.add("panel", "noselect");
 
-        if (Array.isArray(classes)) {
-            classes.forEach(function (c) {
-                elem.classList.add(c);
-            });
-        } else {
-            elem.classList.add(classes);
-        }
-        return elem;
+    // var startBtn = document.createElement("div");
+    // startBtn.classList.add("panel-item", "start-btn", "hoverable");
+    // root.appendChild(startBtn);
+
+    // var startBtnIcn = document.createElement("img");
+    // startBtnIcn.classList.add("relative-center", "panel-item-icon");
+    // startBtnIcn.src = "assets/start-win.svg";
+    // startBtn.appendChild(startBtnIcn);
+
+    // var startMenu = document.createElement("div");
+    // startMenu.classList.add("start-menu");
+    // startMenu.innerHTML = `
+    //     <div style="width:48px; height: 100%; background-color: red;">
+
+    //     </div>
+    //     <div style="width:300px; height: 100%; background-color: green;">
+
+    //     </div>
+    //     <div style="width:400px; height: 100%; background-color: blue;">
+
+    //     </div>
+    // `;
+    // startBtn.appendChild(startMenu);
+
+    // startBtn.onclick = function () {
+    //     if (startMenu.style.display == "none") {
+    //         startMenu.style.display = "flex";
+    //         startBtn.classList.add("hover");
+    //     } else {
+    //         startMenu.style.display = "none";
+    //         startBtn.classList.remove("hover");
+    //     }
+    // };
+
+    var startBtn = new StartButton();
+    root.appendChild(startBtn.btn);
+    startBtn.btn.onclick = function () {
+        startBtn.click();
     }
+    console.log(startBtn.btn);
 
-    function isObject(item) {
-        return (item && typeof item === 'object' && !Array.isArray(item));
+    this.elem = root;
+    this.startBtn = startBtn;
+
+    if (parent) {
+        this.setParent(parent);
     }
-    function mergeDeep(target, ...sources) {
-        if (!sources.length) {
-            return target;
-        }
-        var source = sources.shift();
+}
+Panel.prototype.setParent = function (parent) {
+    parent.appendChild(this.elem);
+}
 
-        if (isObject(target) && isObject(source)) {
-            for (var key in source) {
-                if (isObject(source[key])) {
-                    if (!target[key]) Object.assign(target, { [key]: {} });
-                    mergeDeep(target[key], source[key]);
-                } else {
-                    Object.assign(target, { [key]: source[key] });
-                }
-            }
-        }
-        return mergeDeep(target, ...sources);
+var panel = new Panel(desktop);
+
+
+
+
+function StartButton() {
+    var btn, icon, menu;
+    
+    btn = document.createElement("div");
+    btn.classList.add("panel-item", "start-btn", "hoverable");
+
+    icon = document.createElement("img");
+    icon.classList.add("relative-center", "panel-item-icon");
+    icon.src = "assets/start-win.svg";
+    btn.appendChild(icon);
+
+    menu = document.createElement("div");
+    menu.classList.add("start-menu");
+    menu.innerHTML = `
+        <div style="width:48px; height: 100%; background-color: red;">
+
+        </div>
+        <div style="width:300px; height: 100%; background-color: green;">
+
+        </div>
+        <div style="width:400px; height: 100%; background-color: blue;">
+
+        </div>
+    `;
+    btn.appendChild(menu);
+
+    this.btn = btn;
+    this.icon = icon;
+    this.menu = menu;
+}
+
+StartButton.prototype.hoverIn = function() {
+    this.btn.classList.add("hover");   
+}
+StartButton.prototype.hoverOut = function() {
+    this.btn.classList.remove("hover");   
+}
+StartButton.prototype.openMenu = function() {
+    this.hoverIn();
+    this.menu.style.display = "flex";
+}
+StartButton.prototype.closeMenu = function() {
+    this.hoverOut();
+    this.menu.style.display = "none";
+}
+StartButton.prototype.click = function() {
+    console.log("aaa");
+    if (this.menu.style.display === "none") {
+        this.openMenu();
+    } else {
+        this.closeMenu();
     }
-
-    return {
-        createElem: function (elemName) {
-            var root = elems[elemName],
-                rootElem, elem;
-
-            root.tag = root.tag || "div";
-            rootElem = buildElem(root.tag, root.classes);
-
-            if (root.children) {
-                root.children.forEach(function (child) {
-                    child.tag = child.tag || "div";
-                    elem = buildElem(child.tag, child.classes);
-                    if (child.obj) {
-                        mergeDeep(elem, child.obj);
-                    }
-                    rootElem.appendChild(elem);
-                });
-            }
-
-            if (root.obj) {
-                mergeDeep(rootElem, root.obj);
-            }
-
-            return rootElem;
-        }
-    }
-})();
-
-var desktopController = (function (elemBuilder) {
-    var desktop, wallpaper, panel;
-
-    return {
-        init: function () {
-            desktop = elemBuilder.createElem("desktop");
-            wallpaper = elemBuilder.createElem("wallpaper");
-            panel = elemBuilder.createElem("panel");
-            var startBtn = elemBuilder.createElem("startBtn");
-
-            console.log(panel);
-
-            desktop.appendChild(wallpaper);
-            desktop.appendChild(panel);
-            panel.appendChild(startBtn);
-
-            document.body.appendChild(desktop);
-        },
-        changeWallpaper: function (url) {
-            wallpaper.style.backgroundImage = url;
-        }
-    }
-})(elemBuilder);
-
-
-desktopController.init();
-desktopController.changeWallpaper("url(assets/wallpaper-win.jpg)");
+}
