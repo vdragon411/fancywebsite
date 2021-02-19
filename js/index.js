@@ -1,120 +1,84 @@
-var desktop = document.createElement("div");
-desktop.classList.add("desktop");
-document.body.appendChild(desktop);
-
-
-function Panel(parent) {
-    'use strict';
-    var root = document.createElement("div");
-    root.classList.add("panel", "noselect");
-
-    // var startBtn = document.createElement("div");
-    // startBtn.classList.add("panel-item", "start-btn", "hoverable");
-    // root.appendChild(startBtn);
-
-    // var startBtnIcn = document.createElement("img");
-    // startBtnIcn.classList.add("relative-center", "panel-item-icon");
-    // startBtnIcn.src = "assets/start-win.svg";
-    // startBtn.appendChild(startBtnIcn);
-
-    // var startMenu = document.createElement("div");
-    // startMenu.classList.add("start-menu");
-    // startMenu.innerHTML = `
-    //     <div style="width:48px; height: 100%; background-color: red;">
-
-    //     </div>
-    //     <div style="width:300px; height: 100%; background-color: green;">
-
-    //     </div>
-    //     <div style="width:400px; height: 100%; background-color: blue;">
-
-    //     </div>
-    // `;
-    // startBtn.appendChild(startMenu);
-
-    // startBtn.onclick = function () {
-    //     if (startMenu.style.display == "none") {
-    //         startMenu.style.display = "flex";
-    //         startBtn.classList.add("hover");
-    //     } else {
-    //         startMenu.style.display = "none";
-    //         startBtn.classList.remove("hover");
-    //     }
-    // };
-
-    var startBtn = new StartButton();
-    root.appendChild(startBtn.btn);
-    startBtn.btn.onclick = function () {
-        startBtn.click();
-    }
-    console.log(startBtn.btn);
-
-    this.elem = root;
-    this.startBtn = startBtn;
-
-    if (parent) {
-        this.setParent(parent);
-    }
+function inherit (derived, base) {
+    derived.prototype = Object.create(base.prototype);
+    derived.prototype.constructor = derived;
 }
-Panel.prototype.setParent = function (parent) {
+
+function Widget (tag = "div") {
+    this.elem = document.createElement(tag);
+}
+Widget.prototype.addChild = function (child) {
+    this.elem.appendChild(child.elem);
+}
+Widget.prototype.addClass = function (...classes) {
+    this.elem.classList.add(...classes);
+}
+Widget.prototype.setParent = function (parent) {
     parent.appendChild(this.elem);
 }
+Widget.prototype.fireEvent = function (name, obj) {
+    var event = new CustomEvent(name, {
+        detail: obj
+    });
+    this.elem.dispatchEvent(event);
+}
 
-var panel = new Panel(desktop);
 
+function Panel () {
+    Widget.call(this);
+    this.addClass("panel", "horizontal");
+    this.setParent(document.body);
 
+    var btn = new PanelButton();
+    this.addChild(btn);
 
+    var elems = new Array();
+    elems.push(btn);
+    var activeElems = new Array();
 
-function StartButton() {
-    var btn, icon, menu;
-    
-    btn = document.createElement("div");
-    btn.classList.add("panel-item", "start-btn", "hoverable");
+    this.elem.onclick = (function () {
+        activeElems.forEach(function(elem) {
+            elem.fireEvent("unfocus", {});
+        })
+    }).bind(this);
 
-    icon = document.createElement("img");
-    icon.classList.add("relative-center", "panel-item-icon");
-    icon.src = "assets/start-win.svg";
-    btn.appendChild(icon);
+}; inherit(Panel, Widget);
 
-    menu = document.createElement("div");
-    menu.classList.add("start-menu");
-    menu.innerHTML = `
-        <div style="width:48px; height: 100%; background-color: red;">
+function PanelButton () {
+    Widget.call(this);
+    this.addClass("hoverable");
 
-        </div>
-        <div style="width:300px; height: 100%; background-color: green;">
-
-        </div>
-        <div style="width:400px; height: 100%; background-color: blue;">
-
-        </div>
-    `;
-    btn.appendChild(menu);
-
-    this.btn = btn;
+    var icon = new Widget("img");
+    icon.elem.src = "assets/start-win.svg";
+    icon.addClass("relative-center");
+    this.addChild(icon);
     this.icon = icon;
-    this.menu = menu;
-}
 
-StartButton.prototype.hoverIn = function() {
-    this.btn.classList.add("hover");   
-}
-StartButton.prototype.hoverOut = function() {
-    this.btn.classList.remove("hover");   
-}
-StartButton.prototype.openMenu = function() {
-    this.hoverIn();
-    this.menu.style.display = "flex";
-}
-StartButton.prototype.closeMenu = function() {
-    this.hoverOut();
-    this.menu.style.display = "none";
-}
-StartButton.prototype.click = function() {
-    console.log("aaa");
-    if (this.menu.style.display === "none") {
-        this.openMenu();
+    // this.elem.onclick = this.onclick.bind(this);
+    this.elem.addEventListener("unfocus", (function () {
+        this.highlightOff();
+    }).bind(this));
+}; inherit(PanelButton, Widget);
+PanelButton.prototype.onclick = function () {
+    if (this.clicked) {
+        console.log("unclicked");
+        this.highlightOff();
+        this.clicked = false;
     } else {
-        this.closeMenu();
+        console.log("clicked");
+        this.highlightOn();
+        this.clicked = true;
     }
 }
+PanelButton.prototype.highlightOn = function () {
+    this.elem.classList.add("hover");
+}
+PanelButton.prototype.highlightOff = function () {
+    this.elem.classList.remove("hover");
+}
+
+// function StartMenu () {
+//     Widget.call(this);
+//     this.addClass
+// }
+
+var panel = new Panel();
