@@ -2,56 +2,44 @@
 
 import signal from "./signal.js";
 
+import {Widget, animate} from "./widget.js";
 
-class Widget { 
-    constructor(tag, classes=[]) {
-        this.tag = tag = tag || "div";
-	classes = classes || [];
-        this.elem = document.createElement(tag);
-        classes.forEach(c => this.elem.classList.add(c));
-        [
-            "onclick",
-            "onmouseover",
-            "onmousedown",
-	    ].forEach(f => {
-            if (this[f]) this.elem[f] = this[f].bind(this);
-        });
-    }
-    addClass(...classes) {
-        this.elem.classList.add(...classes);
-    }
-    addChild(child) {
-        this.elem.appendChild(child.elem);
-    }
-    setParent(parent) {
-        parent.elem.appendChild(this.elem);
-    }
-}
 
 class Panel extends Widget {
-    constructor() {
-        super('div', ["panel", "horizontal", "noselect"]);
+    constructor(classes=[]) {
+        super('div', ["panel", "horizontal", "noselect", ...classes]);
         this.setParent({elem:document.body});
 
-        let btn = new PanelButton();
-        this.addChild(btn);
+        let startBtn = new PanelIconToggle("assets/start-win.svg");
+        let menu = new StartMenu();
+        menu.setToggle(startBtn);
 
-        let btn2 = new PanelButton();
-        this.addChild(btn2);
+        let btn = new PanelIconButton("assets/apps/chrome.svg");
+        btn.whenOn = () => {
+            console.log("clicky");
+        }
+
+        this.addChild(
+            startBtn,
+            btn
+        );
     }
 }
 
-class PanelButton extends Widget {
-    constructor() {
-        super('div', ["hoverable"]);
-        let btn = new Widget("img" ,["relative-center"]);
-        btn.elem.src = "assets/start-win.svg";
-        this.addChild(btn);
-        this.btn = btn;
+class PanelIcon extends Widget {
+    constructor(path, classes=[]) {
+        super("div", ["hoverable", ...classes]);
+        let icn = new Widget("img" ,["relative-center"]);
+        icn.elem.src = path;
+        this.addChild(icn);
+    }
+}
 
-        let menu = new PanelMenu();
-        this.addChild(menu);
-        this.menu = menu;
+class PanelIconToggle extends PanelIcon {
+    constructor(path, classes=[]) {
+        super(path, classes);
+        this.whenOn = null;
+        this.whenOff = null;
     }
     onclick(e) {
         e.stopPropagation();
@@ -65,8 +53,9 @@ class PanelButton extends Widget {
         this.clicked = true;
         this.elem.classList.add("hover");
 
-        this.menu.open();
-
+        if (this.whenOn) {
+            this.whenOn();
+        }
         let widget = this;
         signal.subscribe("unfocus", () => {
             widget.deactivate();
@@ -75,46 +64,68 @@ class PanelButton extends Widget {
     deactivate() {
         this.clicked = false;
 
-        let elem = this.elem;
         this.elem.classList.remove("hoverable");
-        this.menu.close().then( _ => {
-            this.elem.classList.add("hoverable");   
-        });
+        if (this.whenOff) {
+            this.whenOff();
+        }
         this.elem.classList.remove("hover");
-
     }
 }
 
-class PanelMenu extends Widget {
-    constructor () {
-        super('div', ["start-menu"]);
-        this.displayType = this.elem.style.display;
-        this.elem.style.display = "none";
+class PanelIconButton extends PanelIcon {
+    constructor(path, classes=[]) {
+        super(path, classes);
+        this.whenOn = null;
+    }
+    onclick(e) {
+        e.stopPropagation();
+        if (this.whenOn) this.whenOn();
+    }
+}
 
+
+
+
+class PanelMenu extends Widget {
+    constructor (classes = []) {
+        super('div', [...classes]);
+        this.elem.style.display = "none";
         this.elem.onclick = e => e.stopPropagation();
     }
+    setToggle(btn) {
+        btn.whenOn = () => {
+            this.open();
+        }
+        btn.whenOff = () => {
+            this.close().then(_=>{
+                btn.elem.classList.add("hoverable");
+            })
+        }
+        btn.addChild(this);
+    }
     open() {
-        return new Promise( (resolve, reject) => {
-            this.elem.style.display = this.displayType;
-            this.elem.style.animationDuration = "0.5s";
-            this.elem.style.animationFillMode = "forwards";
-            this.elem.style.animationName = "visible";
-            this.elem.addEventListener("animationend", () => {
+        return new Promise((resolve, reject) => {
+            this.elem.style.display = "";
+            animate(this.elem, "fadeInUp", "0.3s").start()
+            .then(_=>{
                 resolve();
-            }, {once: true});
+            });
         });
     }
     close() {
-        return new Promise( (resolve, reject) => {
-            this.elem.offsetHeight;
-            this.elem.style.animationDuration = "0.5s";
-            this.elem.style.animationFillMode = "forwards";
-            this.elem.style.animationName = "visible2";
-            this.elem.addEventListener("animationend", () => {
-                this.elem.style.display = "none";
+        return new Promise((resolve, reject) => {
+            animate(this.elem, "fadeOutDown", "0.3s").start()
+            .then((() => {
                 resolve();
-            }, {once: true});
+                this.elem.style.display = "none";
+            }).bind(this));
         });
+    }
+}
+
+class StartMenu extends PanelMenu {
+    constructor() {
+        super(["start-menu"]);
     }
 }
 

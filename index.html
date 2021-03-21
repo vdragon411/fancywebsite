@@ -7,6 +7,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
 
 
     <style>
@@ -48,42 +49,46 @@
             width: var(--taskbar-size);
             position: relative;
         }
-        .panel > img {
-            width: 10px;
-            height: 10px;
-        }
         .panel > div > img {
             width: 50%;
             height: 50%;
         }
+
+        
         
         .hover, .hoverable:hover {
             transition: 0.18s;
             background-color: rgb(68, 68, 68);
+            /* box-shadow: inset 0 0 0 10em rgba(0, 0, 0, 0.26); */
+            /* box-shadow: inset 0 0 0 10em rgba(255, 255, 255, 0.26); */
         }
 
         .start-menu {
             display: flex;
             height: 700px;
             width: 800px;
-            background-color: white;
-            opacity: 0;
+            background-color: rgb(37, 37, 37);
             position: absolute;
             left: 0px;
             bottom: calc(var(--taskbar-size));
+
+            z-index: -1;
         }
 
-
-
-        .default-enter {
-            animation: visible 0.5s; 
-            animation-fill-mode: forwards;
+        .start-menu--left {
+            width: var(--taskbar-size);
+            display: flex;
+            flex-direction: column;
         }
-        .default-exit {
-            animation: visible 0.5s;
-            animation-fill-mode: forwards;
-            animation-direction: reverse;
+        .start-menu--left > div {
+            height: var(--taskbar-size);
+            position: relative;
         }
+        .start-menu--left >  div > img {
+            width: 50%;
+            height: 50%;
+        }
+
 
 
         @keyframes visible {
@@ -110,7 +115,63 @@
     <div class="hoverable">
         <img class="relative-center" src="assets/start-win.svg">
         <div class="start-menu">
-            
+            <div class="start-menu--left" style="width: var(--taskbar-size); display: flex; flex-direction: column;">
+                <div class="hoverable" style="">
+                    <img class="relative-center" src="assets/start-win.svg">
+                </div>
+                <div class="hoverable" style="">
+                    <img class="relative-center" src="assets/start-win.svg">
+                </div>
+                <div style="margin-top: auto;">
+
+                </div>
+                <div class="hoverable" style="">
+                    <img class="relative-center" src="assets/start-win.svg">
+                </div>
+                <div class="hoverable" style="">
+                    <img class="relative-center" src="assets/start-win.svg">
+                </div>
+                <div class="hoverable" style="">
+                    <img class="relative-center" src="assets/start-win.svg">
+                </div>
+            </div>
+            <div style="background-color: unset; width: 40%">
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: 10px; margin-top:auto; margin-bottom:auto; color: white;"></div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Most Recently Used</div>
+                </div>
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: var(--taskbar-size)">
+                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
+                    </div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
+                </div>
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: var(--taskbar-size)">
+                        <img class="relative-center" style="width:50%;height:50%" src="assets/start-win.svg">
+                    </div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
+                </div>
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: var(--taskbar-size)">
+                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
+                    </div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
+                </div>
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: var(--taskbar-size)">
+                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
+                    </div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
+                </div>
+                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
+                    <div class="" style="width: var(--taskbar-size)">
+                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
+                    </div>
+                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
+                </div>
+            </div>
+            <div style="background-color: blue; flex: 1;"></div>
         </div>
     </div>
     <div class="hoverable">
