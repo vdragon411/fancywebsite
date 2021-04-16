@@ -1,7 +1,7 @@
 export class Widget { 
     constructor(tag, classes=[]) {
         this.tag = tag = tag || "div";
-	classes = classes || [];
+	    classes = classes || [];
         this.elem = document.createElement(tag);
         classes.forEach(c => this.elem.classList.add(c));
         [
@@ -11,6 +11,7 @@ export class Widget {
 	    ].forEach(f => {
             if (this[f]) this.elem[f] = this[f].bind(this);
         });
+        this.style = this.elem.style;
     }
     addClass(...classes) {
         this.elem.classList.add(...classes);
