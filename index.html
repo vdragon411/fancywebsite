@@ -10,15 +10,16 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"> -->
     <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
 
-
+<!-- 
     <style>
-        /* .wallpaper {
-            float: right;
-            padding-right: 540px;
-        } */
-
         :root {
             --taskbar-size: 48px;
+        }
+
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
         }
 
         .relative-center {
@@ -27,272 +28,140 @@
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
         }
-        .absolute-center {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-        }
 
         .panel {
-            background-color: rgb(20,20,20);
+            position: absolute;
+            background-color: black;
             display: flex;
         }
 
-        .panel.horizontal {
-            height: var(--taskbar-size);
-            width: 100%;
-            position: absolute;
-            left: 0px;
-            bottom: 0px;
-        }
-        .panel.horizontal > div {
-            width: var(--taskbar-size);
-            position: relative;
-        }
-        .panel > div > img {
-            width: 50%;
-            height: 50%;
-        }
-
-        
-        
-        .hover, .hoverable:hover {
-            transition: 0.18s;
-            background-color: rgb(68, 68, 68);
-            /* box-shadow: inset 0 0 0 10em rgba(0, 0, 0, 0.26); */
-            /* box-shadow: inset 0 0 0 10em rgba(255, 255, 255, 0.26); */
-        }
-
-        .start-menu {
-            display: flex;
-            height: 700px;
-            width: 800px;
-            background-color: rgb(37, 37, 37);
-            position: absolute;
-            left: 0px;
-            bottom: calc(var(--taskbar-size));
-
-            z-index: -1;
-            color: white;
-        }
-
-        .start-menu--left {
-            width: var(--taskbar-size);
-            position: relative;
-            z-index: 2;
-        }
-        .start-menu--left__main {
-            /* width: 100%; */
-            height: 100%;
-            position: absolute;
+        .top.panel {
             left: 0px;
             top: 0px;
-            background-color: red;
-            display: flex;
+            height: var(--taskbar-size);
+            width: 100%;
             flex-direction: row;
         }
-        .start-menu--left__icons {
-            background-color: green;
-            height: 100%;
-            width: var(--taskbar-size);
-        }
-        .start-menu--left__expand {
-            background-color: blue;
-            height: 100%;
-            width: var(--taskbar-size);
+
+        .bottom.panel {
+            left: 0px;
+            bottom: 0px;
+            height: var(--taskbar-size);
+            width: 100%;
+            flex-direction: row;
         }
 
-        .icon50x50 {
-            height: var(--taskbar-size);
-            position: relative;
+        .left.panel {
+            left: 0px;
+            bottom: 0px;
+            width: calc(var(--taskbar-size) + var(--taskbar-size)/5);
+            height: 100%;
+            flex-direction: column;
         }
-        .icon50x50 > img {
+
+        .right.panel {
+            right: 0px;
+            top: 0px;
+            width: calc(var(--taskbar-size) + var(--taskbar-size)/5);
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .top > .panel-icon , 
+        .bottom > .panel-icon {
+            width: var(--taskbar-size);
+        }
+        .left > .panel-icon , 
+        .right > .panel-icon {
+            height: calc(var(--taskbar-size)/1.5);
+        }
+        .hover, .hoverable:hover {
+            transition: 0.5s;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        .panel-icon > img {
             width: 50%;
             height: 50%;
         }
 
-        /* .start-menu--left > div {
-            height: var(--taskbar-size);
-            position: relative;
-        }
-        .start-menu--left >  div > img {
-            width: 50%;
-            height: 50%;
-        } */
-
-        /* box-shadow: 10px 0px 5px 0px rgba(0,0,0,0.75);
-        background-color: rgb(51, 51, 51); */
-
-
-        .start-menu--middle {
-            width: 40%;
-            overflow-y: scroll;
+        .top.panel > .panel-icon:hover{
+            transition: 0.5s;
+            box-shadow: 0px 2px 0px 0px white inset;
         }
 
-        .start-menu--middle > div {
+        .bottom.panel > .panel-icon:hover {
+            transition: 0.5s;
+            box-shadow: 0px -2px 0px 0px white inset;
+        }
+
+        .left.panel > .panel-icon:hover {
+            transition: 0.5s;
+            box-shadow: 2px 0px 0px 0px white inset;
+        }
+
+        .right.panel > .panel-icon:hover {
+            transition: 0.5s;
+            box-shadow: -2px 0px 0px 0px white inset;
+        }
+    </style> -->
+
+
+    <style>
+
+        :root {
+            --size: 48px;
+            --gap: 0px;
+            /* --path: url(assets/start-win.svg); */
+        }
+
+        .flex-main {
             display: flex;
-            flex-direction: row;
-            height: var(--taskbar-size);
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-        .start-menu--middle__icon {
-            padding-left: 10px;
-            width: var(--taskbar-size)
-        }
-        .start-menu--middle__icon > img {
-            width:40%;
-            height:40%
-        }
-        .start-menu--middle__iconText {
-            margin-top:auto;
-            margin-bottom:auto;
-            font-size: 14px;
-        }
-        .start-menu--middle__text {
-            padding-left: calc(var(--taskbar-size));
-            margin-top:auto;
-            margin-bottom:auto;
-            font-size: 16px;
-        }
-        .start-menu--middle__filler {
-            width: 10px;
-            margin-top:auto;
-            margin-bottom:auto; 
         }
 
-                /* width */
-        ::-webkit-scrollbar {
-        width: 10px;
-        }
-
-        /* Track */
-        ::-webkit-scrollbar-track {
-        background: #1f1f1f;
-        }
-
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-        background: rgb(65, 65, 65);
-        }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        .flex-item {
+            flex-basis: calc(var(--size) - 2* var(--gap));
+            margin: var(--gap);
         }
 
 
-        @keyframes visible {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+
+        .panel {
+            position: absolute;
+            bottom: 0px;
+            width: 100vw;
+            height: var(--size);
+            background-color: #111;
         }
-        @keyframes visible2 {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
+
+        .panel-item:hover {
+            background-color: #444;
         }
+
+        .div-img {
+            background-image: var(--path);
+            /* background-image: url(assets/start-win.svg); */
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+
     </style>
 </head>
 <body>
 
-<!-- <div class="panel horizontal">
-    <div class="hoverable">
-        <img class="relative-center" src="assets/start-win.svg">
-        <div class="start-menu">
-            <div class="start-menu--left" style="width: var(--taskbar-size); display: flex; flex-direction: column;">
-                <div class="hoverable" style="">
-                    <img class="relative-center" src="assets/start-win.svg">
-                </div>
-                <div class="hoverable" style="">
-                    <img class="relative-center" src="assets/start-win.svg">
-                </div>
-                <div style="margin-top: auto;">
 
-                </div>
-                <div class="hoverable" style="">
-                    <img class="relative-center" src="assets/start-win.svg">
-                </div>
-                <div class="hoverable" style="">
-                    <img class="relative-center" src="assets/start-win.svg">
-                </div>
-                <div class="hoverable" style="">
-                    <img class="relative-center" src="assets/start-win.svg">
-                </div>
+    <div class="flex-main panel">
+
+        <div class="flex-item flex-main panel-item"
+             style="--path: url(assets/start-win.svg);">
+            <div class="flex-item div-img" style="--gap: 10px;">
+
             </div>
-            <div style="background-color: unset; width: 40%">
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: 10px; margin-top:auto; margin-bottom:auto; color: white;"></div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Most Recently Used</div>
-                </div>
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: var(--taskbar-size)">
-                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
-                    </div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
-                </div>
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: var(--taskbar-size)">
-                        <img class="relative-center" style="width:50%;height:50%" src="assets/start-win.svg">
-                    </div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
-                </div>
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: var(--taskbar-size)">
-                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
-                    </div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
-                </div>
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: var(--taskbar-size)">
-                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
-                    </div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
-                </div>
-                <div class="hoverable" style="display: flex; flex-direction: row; height: var(--taskbar-size)">
-                    <div class="" style="width: var(--taskbar-size)">
-                        <img class="relative-center" style="width:50%;height:50%" src="assets/apps/chrome.svg">
-                    </div>
-                    <div class="" style="margin-top:auto; margin-bottom:auto; color: white;">Google Chrome</div>
-                </div>
-            </div>
-            <div style="background-color: blue; flex: 1;"></div>
+
         </div>
-    </div>
-    <div class="hoverable">
-        <img class="relative-center" src="assets/apps/chrome.svg">
-    </div>
-    <div class="">
-        <img class="relative-center hoverable" src="assets/win-uparrow.png">
-    </div>
-</div> -->
 
-<!-- 
-<script>
-    (function () {
-        var date = new Date();
-        var options = {
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        var currentTime = date.toLocaleTimeString([], options).toUpperCase();
-        if (currentTime[0] === "0") {
-            currentTime = currentTime.slice(1);
-        }
-        var currentDate = date.toLocaleDateString();
-        document.write(currentTime + "<br>" + currentDate);
-    })();
-</script> -->
-    <div id="debug"></div>
+    </div>
 
-    <script type="module" src="js/index.js"></script>
+    <!-- <script src="js/index.js"></script> -->
 </body>
 </html>
