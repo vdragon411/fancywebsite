@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,158 +11,25 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"> -->
     <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
 
-<!-- 
     <style>
-        :root {
-            --taskbar-size: 48px;
-        }
-
-        .desktop {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-
-        .relative-center {
-            position: relative;
-            left: 50%;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-        }
-
-        .panel {
-            position: absolute;
-            background-color: black;
-            display: flex;
-        }
-
-        .top.panel {
-            left: 0px;
-            top: 0px;
-            height: var(--taskbar-size);
-            width: 100%;
-            flex-direction: row;
-        }
-
-        .bottom.panel {
-            left: 0px;
-            bottom: 0px;
-            height: var(--taskbar-size);
-            width: 100%;
-            flex-direction: row;
-        }
-
-        .left.panel {
-            left: 0px;
-            bottom: 0px;
-            width: calc(var(--taskbar-size) + var(--taskbar-size)/5);
-            height: 100%;
-            flex-direction: column;
-        }
-
-        .right.panel {
-            right: 0px;
-            top: 0px;
-            width: calc(var(--taskbar-size) + var(--taskbar-size)/5);
-            height: 100%;
-            flex-direction: column;
-        }
-
-        .top > .panel-icon , 
-        .bottom > .panel-icon {
-            width: var(--taskbar-size);
-        }
-        .left > .panel-icon , 
-        .right > .panel-icon {
-            height: calc(var(--taskbar-size)/1.5);
-        }
-        .hover, .hoverable:hover {
-            transition: 0.5s;
-            background-color: rgba(255, 255, 255, 0.25);
-        }
-        .panel-icon > img {
-            width: 50%;
-            height: 50%;
-        }
-
-        .top.panel > .panel-icon:hover{
-            transition: 0.5s;
-            box-shadow: 0px 2px 0px 0px white inset;
-        }
-
-        .bottom.panel > .panel-icon:hover {
-            transition: 0.5s;
-            box-shadow: 0px -2px 0px 0px white inset;
-        }
-
-        .left.panel > .panel-icon:hover {
-            transition: 0.5s;
-            box-shadow: 2px 0px 0px 0px white inset;
-        }
-
-        .right.panel > .panel-icon:hover {
-            transition: 0.5s;
-            box-shadow: -2px 0px 0px 0px white inset;
-        }
-    </style> -->
-
-
-    <style>
-
-        :root {
-            --size: 48px;
-            --gap: 0px;
-            /* --path: url(assets/start-win.svg); */
-        }
-
-        .flex-main {
-            display: flex;
-        }
-
-        .flex-item {
-            flex-basis: calc(var(--size) - 2* var(--gap));
-            margin: var(--gap);
-        }
-
-
-
-        .panel {
-            position: absolute;
-            bottom: 0px;
-            width: 100vw;
-            height: var(--size);
-            background-color: #111;
-        }
-
-        .panel-item:hover {
-            background-color: #444;
-        }
-
-        .div-img {
-            background-image: var(--path);
-            /* background-image: url(assets/start-win.svg); */
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
 
     </style>
+    <link rel="stylesheet" href="styles/win.css">
 </head>
+
 <body>
-
-
-    <div class="flex-main panel">
-
-        <div class="flex-item flex-main panel-item"
-             style="--path: url(assets/start-win.svg);">
-            <div class="flex-item div-img" style="--gap: 10px;">
+    <!-- <div class="flex-main panel">
+        <div class="flex-main flex-item flex-center iconP">
+            <div class="icon" style="--path:url(/assets/wallpaper-apple.jpg);" >
 
             </div>
-
         </div>
+        <div class="flex-main flex-item flex-center iconP">
+            <img class="icon" style="--path:url(/assets/wallpaper-apple.jpg);" >
+        </div>
+    </div> -->
 
-    </div>
-
-    <!-- <script src="js/index.js"></script> -->
+    <script src="js/index.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,117 @@
+:root {
+    --path: url(/assets/default.svg);
+}
+
+.panel {
+    background-color: #111;
+    color: whitesmoke;
+    position: absolute;
+
+    bottom: 0px;
+    width: 100%;
+    height: var(--size);
+}
+
+.panel.vertical {
+    --size: 40px;
+    bottom: unset;
+    height: 100%;
+    width: unset;
+    min-width: var(--size);
+}
+
+div.icon {
+    background-image: var(--path);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    --scale: 0.5;
+    height: calc(var(--size) * var(--scale));
+    width: calc(var(--size) * var(--scale));  
+}
+
+img.icon {
+    --scale: 0.5;
+
+    width: auto;
+    height: calc(var(--size) * var(--scale));
+
+    content: var(--path);
+}
+
+img.icon.horz {
+    height: auto;
+    width: calc(var(--size) * var(--scale));
+}
+
+.hoverable:hover, .hover {
+    transition: 0.3s;
+    background-color: #333;
+}
+
+.invert {
+    filter: invert();
+}
+
+.cortana {
+    background-color: white;
+}
+.cortana > .mic {
+    --scale: 0.4;
+    filter: opacity(0.5)
+}
+.cortana > textarea {
+    /* background-color: gray; */
+    resize: none;
+    outline: none;
+    margin-top: auto;
+    margin-bottom: auto;
+    overflow: hidden;
+    font-size: calc(var(--size)/3);
+}
+.vertical > .cortana {
+    background-color: unset;
+}
+.vertical > .cortana > textarea {
+    width: 0px;
+    height: 0px;
+}
+.vertical > .cortana > .mic {
+    width: 0px;
+    height: 0px;
+}
+
+
+.circle {
+    --scale: 0.45;
+    border-radius: 180px;
+    border: 2px solid black;
+    flex-basis: unset;
+    height: calc(var(--size) * var(--scale));
+    width: calc(var(--size) * var(--scale));  
+    min-width: unset;
+}
+.vertical > .cortana > div > .circle {
+    border-color: white;
+}
+
+
+.datetime {
+    padding: 0px 8px;
+}
+.panel-mid {
+    margin-left: auto;
+}
+.vertical > .panel-mid {
+    margin-left: unset;
+    margin-top: auto;
+}
+.showdesktop {
+    min-width: 15px;
+    border: 1px groove gray;
+    border-style: ridge;
+}
+.vertical > .showdesktop {
+    min-width: unset;
+    min-height: 15px;
+}

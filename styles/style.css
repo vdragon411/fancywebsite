@@ -36,3 +36,49 @@ body {
     background-position: center;
     z-index: -100;
 }
+
+.red {
+    background-color: red;
+}
+.green {
+    background-color: green;
+}
+.brown {
+    background-color: brown;
+}
+
+
+
+
+
+
+
+:root {
+    --size: 48px;
+}
+
+.flex-main {
+    display: flex;
+    flex-direction: inherit;
+    flex-basis: unset;
+}
+
+.flex-main.vertical {
+    flex-direction: column;
+}
+.flex-item {
+    flex-basis: var(--size);
+    min-width: var(--size);
+}
+.flex-noitem {
+    flex-basis: unset;
+    /* min-width: unset; */
+}
+.flex-text {
+    flex-basis: unset;
+    min-width: unset;
+}
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
