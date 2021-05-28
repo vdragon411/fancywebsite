@@ -1,5 +1,5 @@
 :root {
-    --path: url(/assets/default.svg);
+    --path: url(..../assets/default.svg);
 }
 
 .panel {

@@ -49,19 +49,19 @@ class DateTime extends FlexDiv {
 class Panel extends FlexDiv {
     constructor() {
         super(['panel','noselect']).add(
-            new Icon('div', ['hoverable']).path("/assets/start-win.svg"),
+            new Icon('div', ['hoverable']).path("../assets/start-win.svg"),
             new FlexDiv(['cortana', 'flex-noitem']).add(
                 new FlexDiv(['circleIcon','flex-center', 'hoverable']).add(
                     new Div(['circle']),
                 ),
                 this.text = new Elem('textarea', ['flex-noitem']),
-                new Icon('div', ['flex-noitem', 'mic']).path("/assets/mic.png")
+                new Icon('div', ['flex-noitem', 'mic']).path("../assets/mic.png")
             ),
-            new Icon('div', ['hoverable'], ['invert']).path("/assets/task-view.png"),
+            new Icon('div', ['hoverable'], ['invert']).path("../assets/task-view.png"),
             new TaskIcons(),
             this.mid = new Div(['panel-mid']),
             new DateTime(),
-            new Icon('div', ['hoverable']).path("/assets/apps/win-notif.svg"),
+            new Icon('div', ['hoverable']).path("../assets/apps/win-notif.svg"),
             this.showdesktop = new Div(['flex-noitem', 'showdesktop', 'hoverable']),
         );
         this.showdesktop.elem.onclick = e => {
@@ -71,7 +71,7 @@ class Panel extends FlexDiv {
         this.text.elem.placeholder = 'Type to search here';
         this.text.elem.rows = "1";
 
-        // this.elem.style.setProperty('--path', "url(/assets/wallpaper-apple.jpg)");
+        // this.elem.style.setProperty('--path', "url(../assets/wallpaper-apple.jpg)");
     }
 }
 
@@ -83,13 +83,13 @@ class TaskIcons extends FlexDiv{
         let picker, icon, endIcon;
 
         let icons = [
-            new Icon('div', ['hoverable']).path("/assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("/assets/apps/chromium.png"),
-            new Icon('div', ['hoverable']).path("/assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("/assets/apps/notepad.png"),
-            new Icon('div', ['hoverable']).path("/assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("/assets/apps/softwarecenter.png"),
-            new Icon('div', ['hoverable']).path("/assets/apps/chrome.svg"),
+            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
+            new Icon('div', ['hoverable']).path("../assets/apps/chromium.png"),
+            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
+            new Icon('div', ['hoverable']).path("../assets/apps/notepad.png"),
+            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
+            new Icon('div', ['hoverable']).path("../assets/apps/softwarecenter.png"),
+            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
             endIcon = new Icon('div', []).setProperty("--path","none"),
         ]
         // this.elem.style.position = "relative";
