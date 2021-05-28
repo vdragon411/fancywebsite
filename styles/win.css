@@ -44,9 +44,12 @@ img.icon.horz {
     width: calc(var(--size) * var(--scale));
 }
 
-.hoverable:hover, .hover {
+.hoverable:hover {
     transition: 0.3s;
     background-color: #333;
+}
+.hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .invert {
@@ -94,6 +97,12 @@ img.icon.horz {
 .vertical > .cortana > div > .circle {
     border-color: white;
 }
+.circleIcon.hoverable:hover {
+    background-color: lightgray;
+}
+.vertical > .cortana > .circleIcon.hoverable:hover {
+    background-color: #333;
+}
 
 
 .datetime {
@@ -101,6 +110,8 @@ img.icon.horz {
 }
 .panel-mid {
     margin-left: auto;
+    min-width: unset;
+    flex-basis: unset;
 }
 .vertical > .panel-mid {
     margin-left: unset;
