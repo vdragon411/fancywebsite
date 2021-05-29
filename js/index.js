@@ -80,7 +80,7 @@ class TaskIcons extends FlexDiv{
     constructor() {
         super(['flex-noitem']).add();
 
-        let picker, icon, endIcon;
+        let endIcon;
 
         let icons = [
             new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
@@ -92,22 +92,20 @@ class TaskIcons extends FlexDiv{
             new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
             endIcon = new Icon('div', []).setProperty("--path","none"),
         ]
+        endIcon.elem.style.flex = "1";
         // this.elem.style.position = "relative";
         this.elem.style.flex = "1";
 
-        endIcon.elem.style.flex = "1";
 
-
+        let picker, icon = null;
         picker = new Icon('div',[]);
         picker.setProperty("--path", "none");
         picker.elem.style.position = "absolute";
-        picker.elem.style.height = "100%";
         picker.elem.style.pointerEvents = 'none';
-        let oldX;
-        let offset = picker.elem.offsetWidth/2
-        this.elem.onmousemove = e2 => {
-            picker.elem.style.left = (e2.x - offset) + "px";
-            oldX = e2.x;
+
+
+        let isVertical = () => {
+            return window.getComputedStyle(this.elem).flexDirection == "column";
         }
 
         let unpickIcon = () => {
@@ -121,6 +119,24 @@ class TaskIcons extends FlexDiv{
         }
 
         this.elem.onmouseleave = e => unpickIcon();
+        let oldX;
+        let offset = picker.elem.offsetWidth/2
+        this.elem.onmousemove = e => {
+            if (!isVertical()) {
+                picker.elem.style.width = "unset";
+                picker.elem.style.height = "100%";
+                picker.elem.style.top = "unset";
+                picker.elem.style.left = (e.x - offset) + "px";
+                oldX = e.x;
+            } else {
+                picker.elem.style.minHeight = "var(--size)";
+                picker.elem.style.height = "unset";
+                picker.elem.style.width = "100%";
+                picker.elem.style.left = "unset";
+                picker.elem.style.top = (e.y - offset) + "px";
+                oldX = e.y;
+            }
+        }
 
         function animate(element, animation) {
             return new Promise( (resolve, reject) => {
@@ -141,24 +157,34 @@ class TaskIcons extends FlexDiv{
                 icon = i;
                 picker.addClass("hover");
                 icon.removeClass("hoverable");
-                offset = e.x - i.elem.offsetLeft;
-                picker.elem.style.left = (e.x - offset) + "px";
+
+                if (!isVertical()) {
+                    offset = e.x - i.elem.offsetLeft;
+                    picker.elem.style.left = (e.x - offset) + "px";
+                } else {
+                    offset = e.y - i.elem.offsetTop;
+                    picker.elem.style.top = (e.y - offset) + "px";
+                }
                 picker.path(icon.currentPath);
                 icon.setProperty("--path", "none");
             }
             i.elem.onmouseup = e => unpickIcon();
             i.elem.onmouseover = e => {
                 if (icon && i != icon) {
-                    if (e.x - oldX < 0) {
+                    let anim = null;
+                    let ex = isVertical() ? e.y : e.x;
+                    if ((ex - oldX) < 0) {
                         i.removeClass("hoverable");
+                        anim = (!isVertical()) ? "Left" : "Down";
+                        animate(i, "slideIn"+anim).then(() => i.addClass("hoverable"))
                         i.elem.before(icon.elem);
-                        animate(i, "slideInLeft").then(() => i.addClass("hoverable"))
                     } else {
                         if (i != endIcon)
                         {
                             i.removeClass("hoverable");
+                            anim = (!isVertical()) ? "Right" : "Up";
+                            animate(i, "slideIn"+anim).then(() => i.addClass("hoverable"))
                             i.elem.after(icon.elem);
-                            animate(i, "slideInRight").then(() => i.addClass("hoverable"))
                         }
                     }
                 }
