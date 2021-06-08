@@ -2,8 +2,8 @@ import {Elem, Div} from "./elem.js"
 import {Flex, FlexDiv} from "./flex.js"
 
 class Icon extends Flex {
-    constructor(iconType, classes=[], imgClasses=[]) {
-        super('div', classes.concat(['iconP', 'flex-center'])).add(
+    constructor(iconType='div', classes=[], imgClasses=[]) {
+        super('div', classes.concat(['flex-center'])).add(
             this.sub = new Elem(iconType, imgClasses.concat(['flex-noitem','icon']))
         )
     }
@@ -49,7 +49,9 @@ class DateTime extends FlexDiv {
 class Panel extends FlexDiv {
     constructor() {
         super(['panel','noselect']).add(
-            new Icon('div', ['hoverable']).path("../assets/start-win.svg"),
+            new Icon('div', ['hoverable']).path("../assets/start-win.svg")
+                .setProperty('--scale', '0.4'),
+
             new FlexDiv(['cortana', 'flex-noitem']).add(
                 new FlexDiv(['circleIcon','flex-center', 'hoverable']).add(
                     new Div(['circle']),
@@ -57,11 +59,18 @@ class Panel extends FlexDiv {
                 this.text = new Elem('textarea', ['flex-noitem']),
                 new Icon('div', ['flex-noitem', 'mic']).path("../assets/mic.png")
             ),
-            new Icon('div', ['hoverable'], ['invert']).path("../assets/task-view.png"),
+
+            new Icon('div', ['hoverable'], ['invert']).path("../assets/task-view.png")
+                .setProperty('--scale', '0.4'),
+            
             new TaskIcons(),
+
             this.mid = new Div(['panel-mid']),
+
             new DateTime(),
+
             new Icon('div', ['hoverable']).path("../assets/apps/win-notif.svg"),
+            
             this.showdesktop = new Div(['flex-noitem', 'showdesktop', 'hoverable']),
         );
         this.showdesktop.elem.onclick = e => {
@@ -78,120 +87,115 @@ class Panel extends FlexDiv {
 
 class TaskIcons extends FlexDiv{
     constructor() {
-        super(['flex-noitem']).add();
+        super(['flex-noitem']);
+        // this.setProperty('flex', '1');
+        this.icons = [  ];
 
-        let endIcon;
-
-        let icons = [
-            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("../assets/apps/chromium.png"),
-            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("../assets/apps/notepad.png"),
-            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
-            new Icon('div', ['hoverable']).path("../assets/apps/softwarecenter.png"),
-            new Icon('div', ['hoverable']).path("../assets/apps/chrome.svg"),
-            endIcon = new Icon('div', []).setProperty("--path","none"),
-        ]
-        endIcon.elem.style.flex = "1";
-        // this.elem.style.position = "relative";
-        this.elem.style.flex = "1";
-
-
-        let picker, icon = null;
-        picker = new Icon('div',[]);
-        picker.setProperty("--path", "none");
-        picker.elem.style.position = "absolute";
-        picker.elem.style.pointerEvents = 'none';
-
-
-        let isVertical = () => {
-            return window.getComputedStyle(this.elem).flexDirection == "column";
-        }
-
-        let unpickIcon = () => {
-            if (picker && icon) {
-                icon.path(picker.currentPath);
-                picker.setProperty("--path", "none");
-                picker.removeClass('hover');
-                icon.addClass("hoverable");
-            }
-            icon = null;
-        }
-
-        this.elem.onmouseleave = e => unpickIcon();
-        let oldX;
-        let offset = picker.elem.offsetWidth/2
-        this.elem.onmousemove = e => {
-            if (!isVertical()) {
-                picker.elem.style.width = "unset";
-                picker.elem.style.height = "100%";
-                picker.elem.style.top = "unset";
-                picker.elem.style.left = (e.x - offset) + "px";
-                oldX = e.x;
-            } else {
-                picker.elem.style.minHeight = "var(--size)";
-                picker.elem.style.height = "unset";
-                picker.elem.style.width = "100%";
-                picker.elem.style.left = "unset";
-                picker.elem.style.top = (e.y - offset) + "px";
-                oldX = e.y;
-            }
-        }
-
-        function animate(element, animation) {
-            return new Promise( (resolve, reject) => {
-                element.addClass('animate__animated', 'animate__'+animation);
-                element.elem.addEventListener("animationend", () => {
-                    element.removeClass('animate__animated', 'animate__'+animation);
-                    void element.elem.offsetWidth;
-                    resolve();
-                }, {once: true});
-            });
-        }
-
+        let selected = null;
         
-        icons.forEach(i => {
-            i.elem.style.animationDuration = "0.2s";
-            i.elem.onmousedown = e => {
-                if (i == endIcon) return;
-                icon = i;
-                picker.addClass("hover");
-                icon.removeClass("hoverable");
+        let picker = new Icon('div', []).path('');
+        this.add(picker, this.endIcon = new Icon().path(''));
 
-                if (!isVertical()) {
-                    offset = e.x - i.elem.offsetLeft;
-                    picker.elem.style.left = (e.x - offset) + "px";
-                } else {
-                    offset = e.y - i.elem.offsetTop;
-                    picker.elem.style.top = (e.y - offset) + "px";
+        picker.elem.style.position = 'absolute';
+        picker.elem.style.height = "100%";
+        picker.elem.style.pointerEvents = "none";
+
+        let offset = picker.getWidth()/2;
+        document.addEventListener('DOMContentLoaded', function() {
+            offset = picker.getWidth()/2;
+        });
+
+function animate(element, animation) {
+    return new Promise( (resolve, reject) => {
+        element.addClass('animate__animated', 'animate__'+animation);
+        element.elem.addEventListener("animationend", () => {
+            element.removeClass('animate__animated', 'animate__'+animation);
+            void element.elem.offsetWidth;
+            resolve();
+        }, {once: true});
+    });
+}
+
+
+
+        this.elem.onmousemove = e => {
+            picker.setLeft((e.x - offset));
+
+            if (selected ) {
+                let px = picker.getLeft() + picker.getWidth()/2;
+                let sxMin = selected.getLeft();
+                let sxMax = selected.getLeft() + selected.getWidth();
+                let index = this.icons.indexOf(selected);
+
+                let switchIcon = (direction, anim, after) => {
+                    console.log(direction,anim);
+                    let nextIcon = this.icons[index + direction];
+
+                    let temp = this.icons[index];
+                    this.icons[index] = this.icons[index +  direction];
+                    this.icons[index + direction] = temp;
+
+                    nextIcon.removeClass('hoverable');
+                    animate(nextIcon, anim ).then(() => {
+                        nextIcon.addClass('hoverable');
+                    });
+                    nextIcon.elem[after](selected.elem);
+                };
+                if (px > sxMax) {
+                    if(index >= 0 && index < this.icons.length - 1) {
+                        switchIcon(1, 'slideInRight', 'after');
+                    }
                 }
-                picker.path(icon.currentPath);
-                icon.setProperty("--path", "none");
-            }
-            i.elem.onmouseup = e => unpickIcon();
-            i.elem.onmouseover = e => {
-                if (icon && i != icon) {
-                    let anim = null;
-                    let ex = isVertical() ? e.y : e.x;
-                    if ((ex - oldX) < 0) {
-                        i.removeClass("hoverable");
-                        anim = (!isVertical()) ? "Left" : "Down";
-                        animate(i, "slideIn"+anim).then(() => i.addClass("hoverable"))
-                        i.elem.before(icon.elem);
-                    } else {
-                        if (i != endIcon)
-                        {
-                            i.removeClass("hoverable");
-                            anim = (!isVertical()) ? "Right" : "Up";
-                            animate(i, "slideIn"+anim).then(() => i.addClass("hoverable"))
-                            i.elem.after(icon.elem);
-                        }
+                else if (px < sxMin) {
+                    if(index >= 1 && index < this.icons.length) {
+                        switchIcon(-1, 'slideInLeft', 'before');
                     }
                 }
             }
-        });
+        }
 
-        this.add(picker, ...icons);
+
+        this.addIcon("../assets/apps/chrome.svg");
+        this.addIcon("../assets/apps/chromium.png");
+        this.addIcon("../assets/apps/explorer.png");
+        this.addIcon("../assets/apps/notepad.png");
+        this.addIcon("../assets/apps/softwarecenter.png");
+
+        this.elem.onmouseleave = 
+        this.elem.onmouseup = e => {
+            if (selected) {
+                selected.path(picker.currentPath);
+                selected.addClass('hoverable');
+                selected = null;
+
+                picker.path('');
+                picker.removeClass('hover');
+            }
+        }
+
+        this.icons.forEach(i => {
+            i.elem.onmousedown = e => {
+                picker.path(i.currentPath);
+                picker.addClass('hover');
+                selected = i;
+                i.path("");
+                i.removeClass('hoverable');
+
+                offset = e.x - i.getLeft();
+                picker.setLeft(e.x - offset);
+            }
+        });
+    }
+
+    isVertical() {
+        return window.getComputedStyle(this.elem).flexDirection == "column";
+    }
+    addIcon(iconPath) {
+        this.icons.push(
+            new Icon('div', ['hoverable']).path(iconPath)
+            .setProperty('animation-duration', '0.3s')
+        );
+        this.icons.forEach(i => this.endIcon.elem.before(i.elem));
     }
 }
 

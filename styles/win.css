@@ -1,5 +1,6 @@
 :root {
-    --path: url(..../assets/default.svg);
+    --path: url(../assets/default.svg);
+    --scale: 0.5;
 }
 
 .panel {
@@ -25,13 +26,13 @@ div.icon {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    --scale: 0.5;
+    /* --scale: 0.5; */
     height: calc(var(--size) * var(--scale));
     width: calc(var(--size) * var(--scale));  
 }
 
 img.icon {
-    --scale: 0.5;
+    /* --scale: 0.5; */
 
     width: auto;
     height: calc(var(--size) * var(--scale));
