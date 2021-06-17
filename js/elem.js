@@ -11,6 +11,9 @@ export class Elem {
         this.elem.classList.remove(...classes);
         return this;
     }
+    toggleClass(klass) {
+        this.elem.classList.toggle(klass);
+    }
     add(...children) {
         children.forEach(c => this.elem.appendChild(c.elem));
         return this;

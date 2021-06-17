@@ -69,10 +69,12 @@ body {
 .flex-item {
     flex-basis: var(--size);
     min-width: var(--size);
+    min-height: var(--size);
 }
 .flex-noitem {
     flex-basis: unset;
-    /* min-width: unset; */
+    min-width: unset;
+    min-height: unset;
 }
 .flex-text {
     flex-basis: unset;

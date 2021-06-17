@@ -14,7 +14,7 @@
 }
 
 .panel.vertical {
-    --size: 40px;
+    --size: 32px;
     bottom: unset;
     height: 100%;
     width: unset;
@@ -107,7 +107,8 @@ img.icon.horz {
 
 
 .datetime {
-    padding: 0px 8px;
+    padding: 8px 8px;
+    /* margin-top: 8px; */
 }
 .panel-mid {
     margin-left: auto;
