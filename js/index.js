@@ -1,7 +1,55 @@
-import { Elem, Div } from './elem.js'
+"use strict";
 
 
-//--------------------------------------------------------------------------------------------
+class Elem {
+    constructor(tag, classes) {
+        this.elem = document.createElement(tag);
+        this.addClass(...classes);
+        this.elem.obj = this;
+        this.vars = {};
+        document.addEventListener('DOMContentLoaded', function () {
+            this.refreshVars();
+            this.init();
+            // this.update();
+        }.bind(this), false);
+    }
+    init() {
+    }
+    update() {
+    }
+    refreshVars() {
+        for (let v in this.vars) {
+            Object.defineProperty(this, v, {
+                get: function () {
+                    return this.vars[v];
+                },
+                set: function (val) {
+                    this.vars[v] = val;
+                    this.update();
+                }
+            });
+        }
+        this.update();
+    }
+    addClass(...classes) {
+        this.elem.classList.add(...classes);
+    }
+    removeClass(...classes) {
+        this.elem.classList.remove(...classes);
+    }
+    toggleClass(clas) {
+        this.elem.classList.toggle(clas);
+    }
+    add(...children) {
+        children.forEach(c => this.elem.appendChild(c.elem));
+        return this;
+    }
+    remove(...children) {
+        children.forEach(c => this.elem.removeChild(c.elem));
+        return this;
+    }
+}
+
 
 class Flex extends Elem {
     constructor(tag, classes) {
@@ -18,112 +66,35 @@ class Flex extends Elem {
     }
 }
 
-class FlexDiv extends Flex {
-    constructor(classes) {
-        super('div', classes);
-    }
-}
-
-//--------------------------------------------------------------------------------------------
-
-class FlexIcon extends FlexDiv {
-    constructor(iconType, classes = [], imgClasses = []) {
-        super(['flex-center'].concat(classes)).add(
-            this.icon = new Elem(
-                iconType,
-                ['flex-noitem', 'icon'].concat(imgClasses)
-            )
+class FlexIcon extends Flex {
+    constructor(classes=[], imgClasses=[]) {
+        super('div', ['flex-center', 'hoverable'].concat(classes)).add(
+            this.iconElem = new Elem('div', ['icon', 'flex-noitem'].concat(imgClasses))
         )
+        this.vars.path = "url('../assets/start-win.svg')";
     }
-}
-
-//--------------------------------------------------------------------------------------------
-
-class DateTime extends FlexDiv {
-    constructor() {
-        super(['hoverable', 'flex-noitem', 'flex-center']).add(
-            this.date = new Elem('center', ['datetime', 'flex-noitem']),
-        );
-
-        setInterval(this.update, (60 - new Date().getSeconds()) * 1000);
-
-        this.date.elem.innerHTML = `
-        3:12 PM<br>
-        17/05/21
-        `;
-        this.update();
+    init() {
+        let clicked = false;
+        this.elem.onclick = e => {
+            if(clicked) {
+                this.path = "url('../assets/start-win.svg')";
+                clicked = false;
+            } else {
+                this.path = "unset";
+                clicked = true;
+            }
+        }
     }
     update() {
-        let dateObj = new Date();
-        let currentTime = dateObj.toLocaleTimeString([],
-            {
-                hour12: true,
-                hour: '2-digit',
-                minute: '2-digit'
-            }).toUpperCase();
-        if (currentTime[0] === "0") {
-            currentTime = currentTime.slice(1);
-        }
-        let currentDate = dateObj.toLocaleDateString([], {
-            day: '2-digit',
-            month: '2-digit',
-            year: '2-digit'
-        });
-        this.date.elem.innerHTML = currentTime + "<br>" + currentDate;
+        this.iconElem.elem.style.setProperty("--path", this.path);
     }
 }
 
+{
+    let icon, iconP;
+    let panel = new Flex('div', ['panel']).add(
+        new FlexIcon()
+    );
 
-
-
-
-class Panel extends FlexDiv {
-    constructor() {
-        let button;
-        super(['panel']).add(
-            button = new FlexIcon('div', ['hoverable'], []),
-            new DateTime()
-        )
-
-        button.elem.onclick = () => {
-            console.log("clicked");
-        }
-    }
+    document.body.appendChild(panel.elem);
 }
-
-
-
-//--------------------------------------------------------------------------------------------
-
-
-let panel = new Panel();
-document.body.appendChild(panel.elem);
-
-
-
-let testPanel = (function () {
-    let container = document.createElement('div');
-    container.style.display = "flex";
-    container.style.flexDirection = "column";
-    container.style.position = "absolute";
-    container.style.left = '50%';
-    container.style.top = '50%';
-    container.style.transform = "translateX(-50%) translateY(-50%)";
-    document.body.appendChild(container);
-    return {
-        addButton: function (name = "Unamed", onclick = () => { }) {
-            let button = document.createElement('button');
-            // button.type = "button";
-            button.innerText = name;
-            button.onclick = () => onclick();
-            button.style.margin = "2px";
-            button.style.width = "100px";
-            container.appendChild(button);
-        }
-    };
-})();
-
-
-testPanel.addButton("panel vertical", () => {
-    panel.toggleClass('vertical');
-})
