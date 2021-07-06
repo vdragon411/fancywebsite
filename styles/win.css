@@ -3,6 +3,24 @@
     --scale: 0.5;
 }
 
+.hoverable:hover {
+    transition: 0.3s;
+    background-color: #333;
+}
+.hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.invert {
+    filter: invert();
+}
+
+
+
+/*
+    PANEL
+*/
+
 .panel {
     background-color: #111;
     color: whitesmoke;
@@ -20,6 +38,16 @@
     width: unset;
     min-width: var(--size);
 }
+
+
+
+
+
+/*
+    ICON
+*/
+
+
 
 div.icon {
     background-image: var(--path);
@@ -45,86 +73,15 @@ img.icon.horz {
     width: calc(var(--size) * var(--scale));
 }
 
-.hoverable:hover {
-    transition: 0.3s;
-    background-color: #333;
-}
-.hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
 
-.invert {
-    filter: invert();
-}
 
-.cortana {
-    background-color: white;
-}
-.cortana > .mic {
-    --scale: 0.4;
-    filter: opacity(0.5)
-}
+
+/*
+    CORTANA
+*/
+
 .cortana > textarea {
-    /* background-color: gray; */
     resize: none;
     outline: none;
-    margin-top: auto;
-    margin-bottom: auto;
-    overflow: hidden;
-    font-size: calc(var(--size)/3);
-}
-.vertical > .cortana {
-    background-color: unset;
-}
-.vertical > .cortana > textarea {
-    width: 0px;
-    height: 0px;
-}
-.vertical > .cortana > .mic {
-    width: 0px;
-    height: 0px;
-}
-
-
-.circle {
-    --scale: 0.45;
-    border-radius: 180px;
-    border: 2px solid black;
-    flex-basis: unset;
-    height: calc(var(--size) * var(--scale));
-    width: calc(var(--size) * var(--scale));  
-    min-width: unset;
-}
-.vertical > .cortana > div > .circle {
-    border-color: white;
-}
-.circleIcon.hoverable:hover {
-    background-color: lightgray;
-}
-.vertical > .cortana > .circleIcon.hoverable:hover {
-    background-color: #333;
-}
-
-
-.datetime {
-    padding: 8px 8px;
-    /* margin-top: 8px; */
-}
-.panel-mid {
-    margin-left: auto;
-    min-width: unset;
-    flex-basis: unset;
-}
-.vertical > .panel-mid {
-    margin-left: unset;
-    margin-top: auto;
-}
-.showdesktop {
-    min-width: 15px;
-    border: 1px groove gray;
-    border-style: ridge;
-}
-.vertical > .showdesktop {
-    min-width: unset;
-    min-height: 15px;
+    font-size: medium;
 }
