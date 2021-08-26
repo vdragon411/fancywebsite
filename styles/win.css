@@ -1,55 +1,15 @@
 :root {
-    --path: url(../assets/default.svg);
+    --path: url("../assets/default.svg");
+    --size: 48px;
     --scale: 0.5;
 }
 
-.hoverable:hover {
-    transition: 0.3s;
-    background-color: #333;
-}
-.hover {
-    background-color: rgba(255, 255, 255, 0.2);
+.desktop {
+    background-image: url("../assets/wallpaper-win.jpg");
+    background-position: center;
 }
 
-.invert {
-    filter: invert();
-}
-
-
-
-/*
-    PANEL
-*/
-
-.panel {
-    background-color: #111;
-    color: whitesmoke;
-    position: absolute;
-
-    bottom: 0px;
-    width: 100%;
-    height: var(--size);
-}
-
-.panel.vertical {
-    --size: 32px;
-    bottom: unset;
-    height: 100%;
-    width: unset;
-    min-width: var(--size);
-}
-
-
-
-
-
-/*
-    ICON
-*/
-
-
-
-div.icon {
+.icon {
     background-image: var(--path);
     background-size: contain;
     background-position: center;
@@ -59,29 +19,88 @@ div.icon {
     width: calc(var(--size) * var(--scale));  
 }
 
-img.icon {
-    /* --scale: 0.5; */
 
-    width: auto;
-    height: calc(var(--size) * var(--scale));
 
-    content: var(--path);
+.red {
+    background-color: red;
+}
+.blue {
+    background-color: blue;
+}
+.green {
+    background-color: green;
+}
+.purple {
+    background-color: purple;
 }
 
-img.icon.horz {
-    height: auto;
-    width: calc(var(--size) * var(--scale));
+.spacer {
+    margin: auto;
 }
 
 
+.panel-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: calc(var(--size) * (var(--scale)*1.4));
+}
+
+.panel-button {
+    /* position: relative; */
+    min-width: var(--size);
+    min-height: var(--size);
+}
+
+.hoverable:hover, .hover {
+    background-color: #333;
+    transition: 0.3s;
+}
 
 
-/*
-    CORTANA
-*/
+.panel-side {
+    display: flex;
+}
 
-.cortana > textarea {
-    resize: none;
-    outline: none;
-    font-size: medium;
+.panel-side.left {
+    flex-direction: row-reverse;
+    height: 100%;
+}
+.panel-side.right {
+    flex-direction: row;
+    height: 100%;
+}
+.panel-side.bottom {
+    flex-direction: column-reverse;
+    width: 100%;
+}
+.panel-side.top {
+    flex-direction: column;
+    width: 100%;
+}
+.panel {
+    /* background-color: #222; */
+    display: flex;
+    flex-basis: var(--size);
+    /* transition: 2s; */
+    z-index: 5;
+}
+
+.menu {
+    z-index: -2;
+    /* background-color: black; */
+    /* opacity: 0.5; */
+}
+.blur::before {
+    content: "";
+    position: absolute;
+    /* position: fixed; */
+    width: 100%;
+    height: 100%;
+    /* filter: blur('#sharpBlur'); */
+    backdrop-filter: blur(6px);
+    left: 0;
+    right: 0;
+    z-index: -4;
+    background-color: rgba(0, 0, 0, 0.85);
 }

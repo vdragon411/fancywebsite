@@ -1,31 +1,43 @@
 "use strict"
+import Desktop from "./desktop.js";
+import Elem from "./elem.js";
+import Utils from "./utils.js";
 
-import Elem from "./elem.js"
+document.body.appendChild(
+    new Desktop().add(
 
-import Flex, { FlexIcon } from "./flex.js"
+        // Tag.div()
+        // .config(that => {
+        //     that.style.border = "1px solid black";
+        //     that.style.position = "absolute";
+        //     that.style.pointerEvents = "none";
+        //     // that.style.width = "50px";
+        //     // that.style.height = "50px";
+
+        //     let menu = Tag.div('red');
+        //     menu.style.backgroundColor = "Red";
+        //     menu.style.position = "fixed";
+        //     menu.style.width = "200px";
+        //     menu.style.height = "300px";
+        //     menu.style.opacity = "0.5";
+        //     menu.style.display = "none";
+        //     document.body.appendChild(menu.elem);
 
 
-class Button extends FlexIcon {
-    constructor(classes=[], imgClasses=[]) {
-        super(classes, imgClasses)
+        //     document.body.addEventListener("mousemove", e => {
+        //         that.style.left = e.clientX + "px";
+        //         that.style.top = e.clientY + "px";
+        //     })
 
-        this.elem.onclick = e => this.onclick(e);
-        this.elem.onmousedown = e => this.onmousedown(e);
-        this.elem.onmouseup = e => this.onmouseup(e);
-    }
-    onclick() {}
-    onmousedown() {}
-    onmouseup() {}
-}
+        //     window.oncontextmenu = function (e) {
+        //         menu.style.display = menu.style.display == "none"? "block" : "none";
+        //         Utils.positionMenu(that, menu, {
+        //             flip: false,
+        //             horizontal: false,
+        //         });
+        //         e.preventDefault();
+        //     }
+        // })
 
-class Panel extends Flex {
-    constructor(classes=[]) {
-        super('div', ['panel'].concat(classes)).add(
-            this.btn = new Button(['hoverable']).path("url(../assets/start-win.svg)")
-        );
-
-        this.btn.onmousedown = e => console.log('hello');
-    }
-}
-
-const panel = new Panel().root();
+    ).elem
+)
