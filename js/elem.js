@@ -1,13 +1,9 @@
 
 "use strict"
-// import dom_events from "./dom_events.js";
 
 export class Elem {
     #displayStyle;
     constructor(tag = "div", classes = []) {
-        // this.elem = document.createElement(tag);
-        // classes.forEach(c => this.elem.classList.add(c));
-        // super(...arguments);
         this.args = [...arguments];
         this.build(true);
         this.props = Elem.createProps(this);
@@ -112,7 +108,11 @@ Elem.createProps = (that) => {
             if (prop == "setup") {
                 return f => {f(props); return props};
                 // return true;
-            } else if (prop == "syncAll"){
+            } else 
+            if (prop == "syncAll"){
+                if (!obj.propFuncs) {
+                    obj.propFuncs = []
+                }
                 return f => { obj.propFuncs.forEach(f => f()); return props;}
             }
             return Reflect.get(...arguments);
@@ -120,16 +120,6 @@ Elem.createProps = (that) => {
     });
     return props;
 }
-
-// dom_events.forEach(func => {
-//     Elem.prototype[func] = function(e) {
-//         console.log(this);
-//         (this[func])? this[func](e) : {};
-//     };
-//     // e => 
-// })
-
-// console.log(Elem.prototype)
 
 export default Elem;
 

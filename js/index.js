@@ -1,43 +1,69 @@
 "use strict"
-import Desktop from "./desktop.js";
-import Elem from "./elem.js";
+// import Desktop from "./desktop.js";
+import {Elem, Tag} from "./elem.js";
 import Utils from "./utils.js";
 
 document.body.appendChild(
-    new Desktop().add(
+    // new Desktop().add(
+    // ).elem
+    Tag.div("box", "expand").setup(boxRef => {
+        boxRef.style.backgroundImage = "url(../assets/wallpaper-apple.jpg)";
+        boxRef.style.backgroundPosition = "center";
+        boxRef.elem.innerText = "Hello"
+        boxRef.style.display = "flex";
+        boxRef.style.flexDirection = "column";
 
-        // Tag.div()
-        // .config(that => {
-        //     that.style.border = "1px solid black";
-        //     that.style.position = "absolute";
-        //     that.style.pointerEvents = "none";
-        //     // that.style.width = "50px";
-        //     // that.style.height = "50px";
+        let picked = false;
+        let pickerNode = null;
+        let createPanel = (msg) => Tag.div("box", "blur", "panel").setup(panelRef => {
+            let offsetX = 0;
+            let offsetY = 0;
 
-        //     let menu = Tag.div('red');
-        //     menu.style.backgroundColor = "Red";
-        //     menu.style.position = "fixed";
-        //     menu.style.width = "200px";
-        //     menu.style.height = "300px";
-        //     menu.style.opacity = "0.5";
-        //     menu.style.display = "none";
-        //     document.body.appendChild(menu.elem);
+            let mouseFunc = e => {
+                // that.style.left = (e.clientX - offsetX)+'px';
+                pickerNode.style.top = (e.clientY - offsetY)+'px';
+            }
 
+            panelRef.elem.onmousedown = e => {
+                if (picked) return
+                picked = true
+                pickerNode.style.display = "";
+                pickerNode.elem = panelRef.elem.cloneNode(true);
+                pickerNode.style.width = panelRef.getStyle().width;
+                pickerNode.style.height = panelRef.getStyle().height;
+                pickerNode.style.position =　"absolute"
+                pickerNode.style.left = panelRef.style.left;
+                pickerNode.style.top = panelRef.style.top;
 
-        //     document.body.addEventListener("mousemove", e => {
-        //         that.style.left = e.clientX + "px";
-        //         that.style.top = e.clientY + "px";
-        //     })
+                offsetX = e.clientX - panelRef.elem.getBoundingClientRect().left;
+                offsetY = e.clientY - panelRef.elem.getBoundingClientRect().top;
+                mouseFunc(e);
 
-        //     window.oncontextmenu = function (e) {
-        //         menu.style.display = menu.style.display == "none"? "block" : "none";
-        //         Utils.positionMenu(that, menu, {
-        //             flip: false,
-        //             horizontal: false,
-        //         });
-        //         e.preventDefault();
-        //     }
-        // })
+                console.log({offsetX, offsetY})
 
-    ).elem
+                document.addEventListener("mousemove", mouseFunc)
+            }
+            panelRef.elem.onmouseup = e => {
+                if (!picked) return
+                picked = false
+                // pickerNode.style.display = "None";
+                document.removeEventListener("mousemove", mouseFunc)
+                pickerNode.style.left = ""
+                pickerNode.style.top = ""
+                pickerNode.style.width = "";
+                pickerNode.style.height = "";
+                pickerNode.style.position = "";
+            }
+            panelRef.elem.innerText = msg
+        })
+
+        pickerNode = createPanel("");
+        // pickerNode.style.display = "None";
+
+        boxRef.add(createPanel("1"));
+        boxRef.add(createPanel("2"));
+        boxRef.add(createPanel("3"));
+        boxRef.add(createPanel("4"));
+        boxRef.add(pickerNode);
+    }).elem
 )
