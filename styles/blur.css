@@ -1,0 +1,33 @@
+:root {
+    --blur: 5px;
+}
+
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    /* .blur {
+        z-index: 0;
+    }
+    .blur::before {
+        background-image: var(--wallpaper);
+        background-size: cover;
+        background-origin: border-box;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position: center;
+
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        filter: blur(var(--blur));
+        z-index: -1;
+    } */
+}
+
+@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    .blur {
+        backdrop-filter: blur(var(--blur));
+        -webkit-backdrop-filter: blur(var(--blur));
+    }
+}

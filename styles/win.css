@@ -1,106 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
 :root {
-    --path: url("../assets/default.svg");
-    --size: 48px;
-    --scale: 0.5;
+    --wallpaper: url("../assets/wallpaper-apple.jpg");
+    --wallpaper: url("../assets/wallpaper-win.jpg");
 }
 
-.desktop {
-    background-image: url("../assets/wallpaper-win.jpg");
+body {
+    background-color: #555;
+    overflow: hidden;
+}
+
+.wallpaper {
+    background-image: var(--wallpaper);
+    background-repeat: no-repeat;
+    background-size: cover;
     background-position: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: -100;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex.row {
+    flex-direction: row;
+}
+
+.flex.column {
+    flex-direction: column;
+}
+
+.flex-expand {
+    flex: 1;
+}
+.flex-wrap {
+    flex-wrap: wrap;
+}
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.flex.center {
+    align-items: center;
+    justify-content: center;
+}
+.flex.center-stretch {
+    align-items: stretch;
+    justify-content: stretch;
+}
+
+.self-center-stretch {
+    align-self: stretch;
+    justify-self: stretch;
+}
+
+.min-square {
+    flex-basis: 16px;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+.window-mgr {
+    width: 100vw;
+    height: 100vh;
+}
+
+.window {
+    position: absolute;
+    width: 400px;
+    height: 340px;
+    left: 30px;
+    top: 30px;
+    background-color: rgba(0, 0, 0, 0.226);
+    border: thin solid black;
+    --blur: 8px;
+    box-shadow: 0px 0px 10px -4px;
+    overflow: visible;
+    min-width: 200px;
+    min-height: 150px;
+}
+
+.resizer {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border: 2px solid black;
+    position: absolute;
+}
+
+.window-titlebar {
+    flex-basis: 24px;
+    border-bottom: 1px solid black;
+    background-color: rgb(255, 255, 255);
+}
+
+.ctl-button {
+    flex-basis: 40px;
+}
+
+.hoverable:hover {
+    background-color: rgba(0, 0, 0, 0.246);
+}
+
+.max:active {
+    background-color: rgba(0, 0, 0, 0.377);
+}
+
+.close.hoverable:hover {
+    background-color: rgb(228, 46, 61);
+    color: white;
+}
+
+.window-content {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.window-content-main {
+    flex-grow: 1;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* scroll-behavior: smooth; */
+    /* scrollbar-width: none; */
+}
+.window-content-main {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.window-content-main::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
 
 .icon {
-    background-image: var(--path);
-    background-size: contain;
-    background-position: center;
+    background-image: url("../assets/start-win.svg");
     background-repeat: no-repeat;
-    /* --scale: 0.5; */
-    height: calc(var(--size) * var(--scale));
-    width: calc(var(--size) * var(--scale));  
+    background-position: center;
+    filter: invert();
+}
+
+.title {
+    padding-left: 4px;
 }
 
 
-
-.red {
-    background-color: red;
-}
-.blue {
-    background-color: blue;
-}
-.green {
-    background-color: green;
-}
-.purple {
-    background-color: purple;
-}
-
-.spacer {
-    margin: auto;
-}
-
-
-.panel-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-basis: calc(var(--size) * (var(--scale)*1.4));
-}
-
-.panel-button {
-    /* position: relative; */
-    min-width: var(--size);
-    min-height: var(--size);
-}
-
-.hoverable:hover, .hover {
-    background-color: #333;
-    transition: 0.3s;
-}
-
-
-.panel-side {
-    display: flex;
-}
-
-.panel-side.left {
-    flex-direction: row-reverse;
-    height: 100%;
-}
-.panel-side.right {
-    flex-direction: row;
-    height: 100%;
-}
-.panel-side.bottom {
-    flex-direction: column-reverse;
-    width: 100%;
-}
-.panel-side.top {
-    flex-direction: column;
-    width: 100%;
-}
 .panel {
-    /* background-color: #222; */
-    display: flex;
-    flex-basis: var(--size);
-    /* transition: 2s; */
-    z-index: 5;
-}
-
-.menu {
-    z-index: -2;
-    /* background-color: black; */
-    /* opacity: 0.5; */
-}
-.blur::before {
-    content: "";
-    position: absolute;
-    /* position: fixed; */
-    width: 100%;
-    height: 100%;
-    /* filter: blur('#sharpBlur'); */
-    backdrop-filter: blur(6px);
-    left: 0;
-    right: 0;
-    z-index: -4;
-    background-color: rgba(0, 0, 0, 0.85);
+    /* left: 0px; */
+    /* bottom: 0px; */
+    /* position: absolute; */
+    /* height: 32px; */
+    /* width: 100vw; */
+    flex-basis: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    z-index: 100;
+    background-color: black;
 }

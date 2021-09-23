@@ -3,77 +3,130 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyWebsite</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
-
-    <style>
-        * {
-            border: 0px;
-            margin: 0px;
-            padding: 0px;
-            border-spacing: 0px;
-            --gap: 0px;
-        }
-
-        body {
-            background-color: #555;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            overflow: hidden;
-            display: flex;
-            height: 100vh;
-        }
-
-        .red {
-            background-color: red;
-        }
-
-        .blue {
-            background-color: blue;
-        }
-
-        .green {
-            background-color: green;
-        }
-
-
-        .box {
-            border-radius: 16px;
-            margin: 10px;
-            min-height: 64px;
-            z-index: 0;
-            position: relative;
-            background-color: rgba(255, 255, 255, 0.356);
-            padding: 20px;
-            box-shadow: 0 0 10px 0px;
-        }
-
-        .box.expand {
-            flex: 1;
-        }
-
-        .box.blur::before {
-            /* box-shadow: 0 0 10px 0px; */
-            content: "";
-            position: absolute;
-            border-radius: inherit;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(8px);
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            z-index: -1;
-        }
-
-    </style>
-    <!-- <link rel="stylesheet" href="styles/win.css"> -->
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/win.css">
+    <link rel="stylesheet" href="styles/blur.css">
 </head>
 
 <body>
+    <div class="wallpaper"></div>
+    <!-- <div class="window-mgr">
+        <div class="window flex column blur" id="window1">
+            <div class="window-titlebar flex center">
+                <span class="hoverable self-center-stretch flex center" style="flex-basis: 32px;">
+                    <span class="min-square icon"></span>
+                </span>
+                <span class="hoverable title"> Hello </span>
+                <span style="margin-left: auto;"></span>
+                <span class="ctl-button hoverable flex center self-center-stretch">
+                    <span>‒</span>
+                </span>
+                <span id="max" class="ctl-button hoverable flex center self-center-stretch max">
+                    <span>☐</span>
+                </span>
+                <span class="ctl-button hoverable flex center self-center-stretch close">
+                    <span>✕</span>
+                </span>
+            </div>
+            <div class="window-content flex">
+                <div class="min-square" style="margin:10px;border: 4px solid black"></div>
+            </div>
+            <div id="resizer-lt" class="resizer" style="left:-5px; top:-5px;"></div>
+            <div id="resizer-lb" class="resizer" style="left:-5px; bottom:-5px;"></div>
+            <div id="resizer-rt" class="resizer" style="right: -5px; top:-5px;"></div>
+            <div id="resizer-rb" class="resizer" style="right: -5px; bottom:-5px;"></div>
+
+            <div id="resizer-ll" class="resizer" style="left: -5px; top: 50%;"></div>
+            <div id="resizer-rr" class="resizer" style="right: -5px; top: 50%;"></div>
+            <div id="resizer-tt" class="resizer" style="left: 50%; top:-5px;"></div>
+            <div id="resizer-bb" class="resizer" style="left: 50%; bottom:-5px;"></div>
+        </div>
+        
+    </div> -->
+    <!-- <div class="panel-mgr">
+        <div id="max" style="flex: 1;"></div>
+        <div class="panel"></div>
+    </div> -->
+
+    <div class="window-mgr flex">
+        <div id="panel-slot-l" class="flex panel-slot">
+        </div>
+        <div class="flex flex-expand column">
+            <div id="panel-slot-t" class="flex  panel-slot  column">
+            </div>
+            <div class="window-area flex flex-expand">
+
+
+
+                <div class="window flex column blur" id="window1">
+                    <div class="window-titlebar flex center">
+                        <span class="hoverable self-center-stretch flex center" style="flex-basis: 32px;">
+                            <span class="min-square icon"></span>
+                        </span>
+                        <span class="hoverable title"> Hello </span>
+                        <span style="margin-left: auto;"></span>
+                        <span class="ctl-button hoverable flex center self-center-stretch">
+                            <span>‒</span>
+                        </span>
+                        <span id="max" class="ctl-button hoverable flex center self-center-stretch max">
+                            <span>☐</span>
+                        </span>
+                        <span class="ctl-button hoverable flex center self-center-stretch close">
+                            <span>✕</span>
+                        </span>
+                    </div>
+                    <div class="window-content flex" style = "height: 100%">
+                        <div class="window-content-main flex flex-wrap">
+                            <script>
+                                const square = `<div class="min-square" style="margin:10px;border: 4px solid black"></div>`;
+                                // const that = document.currentScript;
+                                // window.addEventListener("load", e => {
+                                for (let i =0; i<1000; i++) {
+                                    document.write(square);
+                                }
+                                document.write(
+                                    `<div class="min-square" style="background-color:red;margin:10px;border: 4px solid black"></div>`
+                                )
+                            </script>
+                        </div>
+                        <div class="window-content-scroll" style="
+                            background-color: gray;
+                            min-width: 16px;
+                            /* position: relative; */
+                        ">
+                            <div style="background-color: white;
+                            /* position: absolute; */
+                            width: 16px;
+
+                            min-height: 48px;"></div>
+                        </div>
+                    </div>
+                    <div id="resizer-lt" class="resizer" style="left:-5px; top:-5px;"></div>
+                    <div id="resizer-lb" class="resizer" style="left:-5px; bottom:-5px;"></div>
+                    <div id="resizer-rt" class="resizer" style="right: -5px; top:-5px;"></div>
+                    <div id="resizer-rb" class="resizer" style="right: -5px; bottom:-5px;"></div>
+        
+                    <div id="resizer-ll" class="resizer" style="left: -5px; top: 50%;"></div>
+                    <div id="resizer-rr" class="resizer" style="right: -5px; top: 50%;"></div>
+                    <div id="resizer-tt" class="resizer" style="left: 50%; top:-5px;"></div>
+                    <div id="resizer-bb" class="resizer" style="left: 50%; bottom:-5px;"></div>
+                </div>
+
+            </div>
+            <div id="panel-slot-b" class="flex panel-slot column">
+                <div class="panel"></div>
+            </div>
+        </div>
+        <div id="panel-slot-r" class="flex panel-slot">
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+
     <script src="js/index.js" type="module"></script>
 </body>
 
