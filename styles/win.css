@@ -6,11 +6,12 @@
 }
 :root {
     --wallpaper: url("../assets/wallpaper-apple.jpg");
-    --wallpaper: url("../assets/wallpaper-win.jpg");
+    /* --wallpaper: url("../assets/wallpaper-win.jpg"); */
 }
 
 body {
     background-color: #555;
+    background-color: black;
     overflow: hidden;
 }
 
@@ -22,144 +23,71 @@ body {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    z-index: -100;
+    z-index: -10000;
+}
+.win.wallpaper {
+    --wallpaper: url("../assets/wallpaper-win.jpg");
 }
 
-.flex {
+.mac.wallpaper {
+    --wallpaper: url("../assets/wallpaper-apple.jpg");
+}
+
+.panel-mgr {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100vw;
+    /* height: 100vw; */
     display: flex;
-}
-
-.flex.row {
-    flex-direction: row;
-}
-
-.flex.column {
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
 }
 
-.flex-expand {
-    flex: 1;
+.panel {
+    display: flex;
+    height: 48px;
 }
-.flex-wrap {
-    flex-wrap: wrap;
-}
-.flex-nowrap {
-    flex-wrap: nowrap;
-}
-
-.flex.center {
-    align-items: center;
-    justify-content: center;
-}
-.flex.center-stretch {
-    align-items: stretch;
-    justify-content: stretch;
-}
-
-.self-center-stretch {
-    align-self: stretch;
-    justify-self: stretch;
-}
-
-.min-square {
-    flex-basis: 16px;
-    min-width: 16px;
-    min-height: 16px;
-}
-
-.window-mgr {
+.win.panel {
+    /* transition: 1s; */
     width: 100vw;
-    height: 100vh;
+    background-color: #111;
 }
 
-.window {
-    position: absolute;
-    width: 400px;
-    height: 340px;
-    left: 30px;
-    top: 30px;
-    background-color: rgba(0, 0, 0, 0.226);
-    border: thin solid black;
-    --blur: 8px;
-    box-shadow: 0px 0px 10px -4px;
-    overflow: visible;
-    min-width: 200px;
-    min-height: 150px;
-}
-
-.resizer {
-    width: 10px;
-    height: 10px;
-    background-color: white;
-    border: 2px solid black;
-    position: absolute;
-}
-
-.window-titlebar {
-    flex-basis: 24px;
-    border-bottom: 1px solid black;
-    background-color: rgb(255, 255, 255);
-}
-
-.ctl-button {
-    flex-basis: 40px;
-}
-
-.hoverable:hover {
-    background-color: rgba(0, 0, 0, 0.246);
-}
-
-.max:active {
-    background-color: rgba(0, 0, 0, 0.377);
-}
-
-.close.hoverable:hover {
-    background-color: rgb(228, 46, 61);
-    color: white;
-}
-
-.window-content {
-    overflow-y: hidden;
-    overflow-x: hidden;
-}
-.window-content-main {
-    flex-grow: 1;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* scroll-behavior: smooth; */
-    /* scrollbar-width: none; */
-}
-.window-content-main {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
-}
-.window-content-main::-webkit-scrollbar { 
-    display: none;  /* Safari and Chrome */
+.mac.panel {
+    /* transition: 1s; */
+    width: auto;
+    min-width: 48px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: calc(3.14px * 2);
 }
 
 .icon {
-    background-image: url("../assets/start-win.svg");
+    flex-basis: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+}
+.icon::after {
+    content: "";
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
+    margin: 10px;
+    background-image: url(../assets/finder.svg);
     background-repeat: no-repeat;
     background-position: center;
-    filter: invert();
+    background-size: contain;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.76));
+
+    /* box-shadow: inset 0px 0px 4px 1px rgba(0, 0, 0, 0.4); */
 }
-
-.title {
-    padding-left: 4px;
+.hoverable.icon:hover {
+    filter: brightness(110%) drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.76));
+    transition: 0.3s;
 }
-
-
-.panel {
-    /* left: 0px; */
-    /* bottom: 0px; */
-    /* position: absolute; */
-    /* height: 32px; */
-    /* width: 100vw; */
-    flex-basis: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    z-index: 100;
-    background-color: black;
+.inner-hoverable.icon:hover::after {
+    filter: brightness(110%) drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.76));
+    transition: 0.3s;
 }

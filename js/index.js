@@ -1,171 +1,174 @@
-import { makeDraggable, makeResizable, mouseOnEdge, makeScrollable } from "./util.js";
+import util from "./util.js"
 
-const info = document.createElement("div");
-info.classList.add("window");
-info.style.position = "absolute";
-info.style.width = "200px";
-info.style.height = "300px";
-info.style.right = 0;
-info.style.bottom = "40px";
-info.style.overflowY = "hidden";
-document.body.firstElementChild.insertAdjacentElement("afterend", info);
-makeResizable(info);
+/*
 
-function addInfo(obj) {
-    info.innerHTML = "";
-    for (let key in obj) {
-        info.innerHTML += `${key}: ${obj[key]} <br>`
+Windows
+- Taskbar
+- - StartMenu
+- - Cortana
+- - Task Icons
+- - System Tray
+- - DateTime
+- - Notif Center
+- - Minimize
+- Desktop Icons
+
+Mac
+- TopBar
+- - Apple Menu
+- - App Name
+- - Global Menu
+- - System Tray
+- - DateTime
+- - SideBar
+- Dock
+- - Finder
+- - Task Icons
+- Desktop Icons
+
+*/
+
+
+function properties(that) {
+    let syncFuncs = [];
+    let props = new Proxy(that, {
+        set(obj, prop, value) {
+            obj[prop] = value;
+            syncFuncs.forEach(f => f());
+            return true;
+        },
+        get(obj, prop) {
+            if (prop == "sync") {
+                return {
+                    add(f) {
+                        syncFuncs.push(f);
+                    },
+                    remove(f) {
+                        syncFuncs.splice(syncFuncs.indexOf(f), 1);
+                    }
+                }
+            }
+            return obj[prop];
+        }
+    })
+    return props;
+}
+
+class Elem {
+    constructor(tag, classes) {
+        this.build(tag);
+        if (classes != null) this.elem.className = classes;
+        this.props = properties(this);
+        this.children = [];
+    }
+    build(tag) {
+        if (typeof tag == "string") {
+            if (tag[0] == '.')
+                this.elem = document.querySelector(tag);
+            else
+                this.elem = document.createElement(tag);
+        } else {
+            this.elem = tag;
+        }
+        return this;
+    }
+    setup(f) {
+        f(this);
+        return this;
+    }
+    add(...children) {
+        children.forEach(c => {
+            this.elem.appendChild(c.elem);
+            if (this.children.includes(c)) {
+                this.children.splice(this.children.indexOf(c));
+            }
+            this.children.push(c);
+        })
+        return this;
+    }
+    remove(...children) {
+        children.forEach(c => {
+            this.elem.removeChild(c.elem);
+            this.children.splice(this.children.indexOf(c));
+        })
+        return this;
+    }
+
+    animate(name, reverse) {
+        return new Promise((resolve, reject) => {
+            this.elem.style.animation = "none";
+            this.elem.offsetHeight;
+            this.elem.style.animation = name + " 0.5s ease forwards";
+            if (reverse)
+                this.elem.style.animationDirection = "reverse";
+            this.elem.addEventListener("animationend", e => {
+                resolve();
+            }, { once: true })
+        });
     }
 }
 
 
-
-let cursorElement = null;
-
-const wins = document.querySelectorAll(".window");
-wins.forEach(win => {
-    if (win == info) return;
-
-    win.addEventListener("mousedown", e => {
-        if (win.parentElement.lastElementChild != win)
-            win.parentElement.appendChild(win);
-        // e.stopPropagation();
-    })
-
-    let winDrag = makeDraggable(win.querySelector(".window-titlebar"), {
-        dragElem: win,
-    });
-
-    const getID = val => win.querySelector(val);
-
-    let winResize = makeResizable(win, {
-        // edges: false,
-        // left:   [ getID("#resizer-ll"), getID("#resizer-lt"), getID("#resizer-lb") ],
-        // right:  [ getID("#resizer-rr"), getID("#resizer-rt"), getID("#resizer-rb") ],
-        // top:    [ getID("#resizer-tt"), getID("#resizer-rt"), getID("#resizer-lt") ],
-        // bottom: [ getID("#resizer-bb"), getID("#resizer-rb"), getID("#resizer-lb") ],
-    });
-
-    let resizers = [getID("#resizer-ll"), getID("#resizer-lt"), getID("#resizer-lb"),
-    getID("#resizer-rr"), getID("#resizer-rt"), getID("#resizer-rb"),
-    getID("#resizer-tt"), getID("#resizer-rt"), getID("#resizer-lt"),
-    getID("#resizer-bb"), getID("#resizer-rb"), getID("#resizer-lb"),];
-
-    resizers.forEach(r => {
-        r.style.display = "none";
-    })
-    // win.addEventListener("mouseenter", e => {
-    //     resizers.forEach(r => {
-    //         r.style.display = "";
-    //     })
-    // });
-    // win.addEventListener("mouseleave", e => {
-    //     resizers.forEach(r => {
-    //         r.style.display = "none";
-    //     })
-    // });
-    // document.addEventListener("mousemove", e => {
-    //     if (mouseOnEdge(e, win)) {
-    //             resizers.forEach(r => {
-    //                 r.style.display = "";
-    //             })
-    //     } else {
-    //         resizers.forEach(r => {
-    //             if (!winResize.resizing)
-    //             r.style.display = "none";
-    //         })
-    //     }
-    // });
-
-    let maximized = false;
-    let origWidth, origHeight, origLeft, origTop;
-
-    win.querySelector("#max").addEventListener("click", e => {
-        const par = document.body.querySelector(".window-area");
-
-        if (!maximized) {
-            origWidth = window.getComputedStyle(win).width;
-            origHeight = window.getComputedStyle(win).height;
-            origLeft = window.getComputedStyle(win).left;
-            origTop = window.getComputedStyle(win).top;
-
-            // win.style.width = window.getComputedStyle(par).width;
-            // win.style.height = window.getComputedStyle(par).height;
-            win.style.left = window.getComputedStyle(par).left;
-            win.style.top = window.getComputedStyle(par).top;
-            // win.style.right = "";
-            // win.style.bottom = "";
-
-            win.style.width = "unset";
-            win.style.height = "unset";
-            // win.style.left = window.getComputedStyle(par).left;
-            // win.style.top = window.getComputedStyle(par).top;
-
-            win.style.flex = "1";
-
-            // win.style.position = "static";
-            // win.style.width     = window.getComputedStyle(par).width;
-            // win.style.height    = window.getComputedStyle(par).height;
-            maximized = true;
-        } else {
-            win.style.width = origWidth;
-            win.style.height = origHeight;
-            win.style.left = origLeft;
-            win.style.top = origTop;
-            win.style.position = "absolute";
-            maximized = false;
-        }
-
-    })
-
-
-    document.addEventListener("mousemove", e => {
-        // info.innerHTML = `
-        //     width: ${window.getComputedStyle(win).width} <br>
-        //     height: ${window.getComputedStyle(win.parentElement).height} <br>
-
-        //     min-width: ${window.getComputedStyle(win).getPropertyValue("min-width")} <br>
-        //     min-height: ${window.getComputedStyle(win).minHeight} <br>
-        // `
-
-        winDrag.drag = !winResize.resizing;
-
-        let direction = ""
-        if (cursorElement == win || !cursorElement) {
-            const edge = mouseOnEdge(e, win);
-            if (edge.includes("top")) direction += "n";
-            if (edge.includes("bottom")) direction += "s";
-            if (edge.includes("left")) direction += "w";
-            if (edge.includes("right")) direction += "e";
-
-            direction = direction ? direction + "-resize" : "";
-            // direction = direction ? "cell" : "";
-            if (!winResize.resizing) {
-                if (direction != "") cursorElement = win;
-                else cursorElement = null;
-                document.body.style.cursor = direction;
-            }
-            else {
-                cursorElement = null;
+class App extends Elem {
+    constructor() {
+        function spread(...elems) {
+            return {
+                setup(func) {
+                    func(...elems);
+                    return elems;
+                }
             }
         }
-    })
-});
+        super(".app").add(
+            ...spread(
+                new Elem("div", "win wallpaper"),
+                new Elem("div", "panel-mgr").add(
+                    new Elem("div", "win panel blur").add(
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                        new Elem("div", "icon"),
+                    )
+                )
+            ).setup((wallpaper, panelMgr) => {
+                const panel = panelMgr.children[0];
+                panel.elem.addEventListener("click", e => {
+                    wallpaper.animate("fadeOut").then(() => {
+                        wallpaper.elem.classList.toggle("win");
+                        wallpaper.elem.classList.toggle("mac");
+                        wallpaper.animate("fadeIn");
+                    })
+                    panel.animate("slideOutDown").then(() => {
+                        panel.elem.classList.toggle("win");
+                        panel.elem.classList.toggle("mac");
+                        panel.animate("slideInUp");
+                    })
+                });
+            })
+        );
 
+        const displayHello = _ => {
+            console.log(this.msg);
+            this.props.sync.remove(displayHello)
+        }
 
+        this.props.sync.add(displayHello)
 
+        this.props.msg = "hello";
+        this.props.msg = "hello";
+        this.props.msg = "hello";
+        this.props.msg = "hello";
+        this.props.msg = "hello";
+        this.props.msg = "hello";
+    }
+}
 
-
-document.body.querySelectorAll(".window-content")
-    .forEach(container => {
-        const main = container.querySelector(".window-content-main");
-        const scroll = container.querySelector(".window-content-scroll");
-        const bar = scroll.firstElementChild;
-            makeScrollable(main, scroll, bar);
-    })
-
-
-
-window.addEventListener("resize", e => {
-    console.log("hello")
-})
+new App();

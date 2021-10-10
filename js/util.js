@@ -17,12 +17,15 @@ export function mouseOnEdge(e, win, zoneSize = 5) {
     return res;
 }
 export function makeDraggable(elem, options = {}) {
+    options.dragging = false;
+    options.shouldDrag = true;
     let dragElem = options.dragElem || elem;
     const mousedown = e => {
+        options.dragging = true;
         let offsetX = dragElem.getBoundingClientRect().left - e.clientX;
         let offsetY = dragElem.getBoundingClientRect().top - e.clientY;
         const mousemove = e => {
-            if ((options.drag != null) && options.drag == false) return;
+            if ((options.shouldDrag != null) && options.shouldDrag == false) return;
             dragElem.style.right = "";
             dragElem.style.bottom = "";
             dragElem.style.left = (e.clientX + offsetX) + 'px';
@@ -30,6 +33,7 @@ export function makeDraggable(elem, options = {}) {
         };
         document.addEventListener("mousemove", mousemove);
         document.addEventListener("mouseup", e => {
+            options.dragging = false;
             document.removeEventListener("mousemove", mousemove);
         }, { once: true });
     };
@@ -62,6 +66,7 @@ export function makeResizable(win, options = {}) {
             })
         })
         if (edge != "") {
+            options.resizing = true;
             const oldRect = win.getBoundingClientRect();
             const oldX = e.clientX;
             const oldY = e.clientY;
@@ -80,7 +85,7 @@ export function makeResizable(win, options = {}) {
 
 
             const mousemove = e => {
-                options.resizing = true;
+                if ((options.shouldResize != null) && options.shouldResize == false) return;
                 let left = false, right = false, top = false, bottom = false;
 
                 left = edge.includes("left")
@@ -215,8 +220,179 @@ export function makeScrollable(main, scroll, bar) {
 
 
 
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             WORK IN PROGRESS                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+class DragAction {
+    constructor(elem) {
+        this.status = "";
+        const mousemove = e => {
+            if (this.premousemove) this.premousemove(e);
+            this.mousemove(e);
+            if (this.postmousemove) this.postmousemove(e);
+        }
+        this.mouseupEvent = e => {
+            if (this.status != "down") return;
+            if (e != null) if (this.premouseup) this.premouseup(e);
+            if (e != null) this.mouseup(e);
+            document.removeEventListener("mousemove", mousemove);
+            document.removeEventListener("mouseup", this.mouseupEvent)
+            if (e != null) if (this.postmouseup) this.postmouseup(e);
+            this.status = "";
+        };
+        this.mousedownEvent = e => {
+            if (this.status != "") return;
+            this.status = "down";
+            if (this.premousedown) this.premousedown(e);
+            this.mousedown(e);
+            document.addEventListener("mousemove", mousemove);
+            document.addEventListener("mouseup", this.mouseupEvent)
+
+            if (this.postmousedown) this.postmousedown(e);
+        }
+        this.elem = elem;
+        this.enable();
+    }
+    enable() {
+        this.elem.addEventListener("mousedown", this.mousedownEvent)
+    }
+    disable() {
+        this.elem.removeEventListener("mousedown", this.mousedownEvent)
+        this.mouseupEvent();
+    }
+    mousedown(e) { }
+    mousemove(e) { }
+    mouseup(e) { }
+}
+
+class Draggable extends DragAction {
+    constructor(elem, dragElem) {
+        super(elem)
+        this.dragElem = dragElem != null ? dragElem : elem;
+    }
+    mousedown(e) {
+        this.offsetX = this.dragElem.getBoundingClientRect().left - e.clientX;
+        this.offsetY = this.dragElem.getBoundingClientRect().top - e.clientY;
+    }
+    mousemove(e) {
+        this.dragElem.style.right = "";
+        this.dragElem.style.bottom = "";
+        this.dragElem.style.left = (e.clientX + this.offsetX) + 'px';
+        this.dragElem.style.top = (e.clientY + this.offsetY) + 'px';
+    }
+}
+
+class Resizable extends DragAction {
+    constructor(elem) {
+        super(elem);
+        this.anchorX = null;
+        this.anchorY = null;
+        this.sides = {};
+    }
+    enable() {
+        document.addEventListener("mousedown", this.mousedownEvent);
+    }
+    disable() {
+        document.removeEventListener("mousedown", this.mousedownEvent);
+        this.mouseupEvent();
+    }
+    mousedown(e) {
+        const isMouseInside = (e, elem) => {
+            const rect = elem.getBoundingClientRect();
+            return e.clientX >= rect.left && e.clientX < rect.right
+                && e.clientY >= rect.top && e.clientY < rect.bottom;
+        }
+        let edge = "";
+        if (this.useEdges == null || this.useEdges)
+            edge = mouseOnEdge(e, this.elem);
+        ["left", "right", "top", "bottom"].forEach(side => {
+            this.sides[side] && this.sides[side] != null && this.sides[side].forEach(el => {
+                if (isMouseInside(e, el))
+                    edge += " " + side + " ";
+            })
+        })
+        if (edge != "") {
+            this.oldRect = this.elem.getBoundingClientRect();
+            this.oldX = e.clientX;
+            this.oldY = e.clientY;
+            this.errorX = (this.oldX - this.oldRect.left);
+            this.errorY = (this.oldY - this.oldRect.top);
+
+            const borderX = parseFloat(window.getComputedStyle(this.elem).borderLeftWidth)
+                + parseFloat(window.getComputedStyle(this.elem).borderRightWidth);
+            const borderY = parseFloat(window.getComputedStyle(this.elem).borderTopWidth)
+                + parseFloat(window.getComputedStyle(this.elem).borderBottomWidth);
+
+            this.width     = this.oldRect.width - borderX;
+            this.height    = this.oldRect.height - borderY;
+        }
+        this.edge = edge;
+        this.isResizing = (this.edge == "")? false : true;
+    }
+    mousemove(e) {
+        if (this.edge == "") return;
+        let left = false, right = false, top = false, bottom = false;
+
+        left    = this.edge.includes("left")
+        right   = this.edge.includes("right")
+        top     = this.edge.includes("top")
+        bottom  = this.edge.includes("bottom")
+        {
+            left    &= (!this.anchorX || e.clientX < this.anchorX && this.oldX < this.anchorX - 5) && (e.clientX < this.oldRect.right);
+            right   &= (!this.anchorX || e.clientX > this.anchorX && this.oldX > this.anchorX + 5);
+            top     &= (!this.anchorY || e.clientY < this.anchorY && this.oldY < this.anchorY - 5) && (e.clientY < this.oldRect.bottom);
+            bottom  &= (!this.anchorY || e.clientY > this.anchorY && this.oldY > this.anchorY + 5);
+        }
+
+        const minWidth = parseFloat(window.getComputedStyle(this.elem).minWidth);
+        const minHeight = parseFloat(window.getComputedStyle(this.elem).minHeight);
+
+        const newWidth = this.width - (e.clientX - (this.oldX)) * (right?-1:1);
+        if (newWidth > minWidth && (left || right)) {
+            this.elem.style.width = newWidth + "px";
+            if (left) this.elem.style.left  = e.clientX - this.errorX + "px";
+        }
+
+        const newHeight = this.height - (e.clientY - (this.oldY)) * (bottom?-1:1);
+        if (newHeight > minHeight && (top || bottom)) {
+            this.elem.style.height = newHeight + "px";
+            if (top) this.elem.style.top    = e.clientY - this.errorY + "px";
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default {
     makeDraggable,
     makeResizable,
     makeScrollable,
+    mouseOnEdge,
+
+    Draggable,
+    Resizable
 }
