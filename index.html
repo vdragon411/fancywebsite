@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta className="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles/win.css">
     <link rel="stylesheet" href="styles/blur.css">
@@ -42,9 +42,9 @@
                         return style(builder);
                     }
 
-                    if (prop == "name") {
+                    if (prop == "className") {
                         return (str) => {
-                            builder.topElem.className = str;
+                            builder.topElem.classclassName = str;
                             return builder;
                         }
                     }
@@ -64,13 +64,13 @@
                         return builder;
                     }
 
-                    // let funcName = "";
+                    // let funcclassName = "";
                     // [...prop].forEach(c => {
                     //     if (c == c.toUpperCase()) {
-                    //         funcName += "-";
+                    //         funcclassName += "-";
                     //         c = c.toLowerCase();
                     //     }
-                    //     funcName += c;
+                    //     funcclassName += c;
                     // })
 
                     return str => {
@@ -85,23 +85,26 @@
         }
 
         build()
-            .div.name("container")
+            .div.className("container")
                 .style
                     .backgroundColor("red")
                     .width("100vw")
                     .height("100vh")
                 .end 
-            .add
-                .div.name("first").add
-                    .div.name("child 1")
-                    .div.name("child 2")
-                    .div.name("child 3")
-                    .div.name("child 4")
-                    .end
-                .div.name("second")
-                .div.name("third")
-            .end
+                .add
+                    .div.className("first")
+                        .add
+                            .div.className("child 1")
+                            .div.className("child 2")
+                            .div.className("child 3")
+                            .div.className("child 4")
+                        .end
+                    .div.className("second")
+                    .div.className("third")
+                .end
         .end.elems.forEach(e => document.body.appendChild(e));
+
+        console.log("Hello");
 
     </script>
 </body>
